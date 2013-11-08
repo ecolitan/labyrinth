@@ -167,6 +167,9 @@ class NewGame:
         self.player2 = Player()
         self.player3 = Player()
         self.player4 = Player()
+        # Activate players
+        for i in xrange(0,self.num_players):
+            [self.player1, self.player2, self.player3, self.player4][i].isactive = True
         # Player home squares
         self.player1.home = (0,0)
         self.player2.home = (0,6)
