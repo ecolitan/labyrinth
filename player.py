@@ -4,6 +4,7 @@ class Player:
         self.id = Player.class_counter
         Player.class_counter += 1
         
+        self.isactive = False
         self.name = ''
         self.color = ''
         

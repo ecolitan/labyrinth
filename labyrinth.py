@@ -181,13 +181,9 @@ class NewGame:
         self.cards_per_player = len(self.items)
         shuffle(self.items)
         hands = [self.items[i::self.num_players] for i in range(0, self.num_players)]
-        try:
-            self.player1.cards = hands[0]
-            self.player2.cards = hands[1]
-            self.player3.cards = hands[2]
-            self.player4.cards = hands[3]
-        except IndexError:
-            pass
+        for player in [self.player1, self.player2, self.player3, self.player4]:
+            if player.isactive is True:
+                player.cards = hands.pop()        
         
 A=NewGame()
 
