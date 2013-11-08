@@ -1,36 +1,12 @@
-from random import shuffle, randint
-
-class BoardTile:
-    def __init__(self, exits, item=None, action=None, random_orientation=False):
-        """A single square on the board"""
-        self.is_occupied = False
-        self.item = item
-        self.exits = exits                                # [Top,Right,Down,Left]
-        self.action = action                              #hidden action on back of some cards
-        if random_orientation:
-            self.randomise_orientation()
-        
-    def __repr__(self):
-        return self.item
-        
-    def __str__(self):
-        return str(self.item)
-        
-    def rotate(self):
-        """Rotate the exits 90deg clockwise"""
-        r = self.exits.pop()
-        self.exits.insert(0, r)
-        
-    def randomise_orientation(self):
-        """Randomise the orientation of exits"""
-        for _ in range(randint(0,3)):
-            self.rotate()
+from random import shuffle
+from player import Player
+from tile import BoardTile
 
 class NewGame:
     def __init__(self):
         """Setup the game"""
         
-        #Board Grid
+        # Board Grid
         self.board = { (0,0): None, (0,1): None, (0,2): None, (0,3): None, (0,4): None, (0,5): None, (0,6): None,
                        (1,0): None, (1,1): None, (1,2): None, (1,3): None, (1,4): None, (1,5): None, (1,6): None,
                        (2,0): None, (2,1): None, (2,2): None, (2,3): None, (2,4): None, (2,5): None, (2,6): None,
@@ -38,21 +14,13 @@ class NewGame:
                        (4,0): None, (4,1): None, (4,2): None, (4,3): None, (4,4): None, (4,5): None, (4,6): None,
                        (5,0): None, (5,1): None, (5,2): None, (5,3): None, (5,4): None, (5,5): None, (5,6): None,
                        (6,0): None, (6,1): None, (6,2): None, (6,3): None, (6,4): None, (6,5): None, (6,6): None,}
-        #Player home squares
-        self.player1_home = (0,0)
-        self.player2_home = (0,6)
-        self.player3_home = (6,0)
-        self.player4_home = (6,6)
-        #Player initial locations
-        self.player1_location = self.player1_home
-        self.player2_location = self.player2_home
-        self.player3_location = self.player3_home
-        self.player4_location = self.player4_home
-        #List of items in game
+        
+        
+        # List of items in game
         self.items = ['genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
-                        'candles', 'gem', 'lizzard', 'spider', 'purse', 'chest',
-                        'beetle', 'owl', 'keys', 'dwarf', 'helmet', 'fairy',
-                        'moth', 'dragon', 'mouse', 'ghost', 'crown']
+                      'candles', 'gem', 'lizzard', 'spider', 'purse', 'chest',
+                      'beetle', 'owl', 'keys', 'dwarf', 'helmet', 'fairy',
+                      'moth', 'dragon', 'mouse', 'ghost', 'crown']
         self.actions = ['second_push', 'two_turns', 'swap_figures',
                         'see_two_cards', 'swap_card', 'through_wall']
         self.allowed_push_in_squares = ( (0,1),(0,3),(0,5),(1,0),(3,0),(5,0),
@@ -64,21 +32,13 @@ class NewGame:
         self.corners = ( (0,0), (0,6), (6,0), (6,6) )
         self.movable_squares = tuple(set(self.board.keys()).difference(self.fixed_squares))
         
-        #Game state
+        # Game state
         self.current_tile = ''              #start tile obj
         self.last_pushed_in = (0,0)         #update every move
         self.num_players = 3                #2,3,4 players
         
-        self.cards_per_player = len(self.items)
-        shuffle(self.items)
-        hands = [self.items[i::self.num_players] for i in range(0, self.num_players)]
-        try:
-            self.player1_cards = hands[0]
-            self.player2_cards = hands[1]
-            self.player3_cards = hands[2]
-            self.player4_cards = hands[3]
-        except IndexError:
-            pass
+        # Initialise Players
+        self.init_players()
         
     def print_board(self):
         """Print representation of the board"""
@@ -87,7 +47,7 @@ class NewGame:
         while j < 50:
             for key in keys[i:j]:
                 print self.board[key],
-            print 
+            print
             i += 7; j += 7
         print
         
@@ -122,6 +82,9 @@ class NewGame:
             pre_tile = self.board[pre_square]
             self.board[cur_square] = pre_tile
         self.board[row_vals[0]] = tile
+        
+        #Update last pushed in
+        self.last_pushed_in = push_in_square
         
     def setup_tiles(self):
         """Initialise all tile objects
@@ -188,9 +151,47 @@ class NewGame:
         #Remaining tile is the start tile
         self.current_tile = tiles.pop()
         
+    def path_exists(self, square1, square2):
+        """Determine if a path exists between two squares
+        return True or False
+        """
+        pass
+        # http://en.wikipedia.org/wiki/Tree_traversal
+        # http://stackoverflow.com/questions/3097556/programming-theory-solve-a-maze
+        # http://en.wikipedia.org/wiki/Breadth-first_search
+        
+    def init_players(self):
+        """Initialise the players"""
+        ## Setup players
+        self.player1 = Player()
+        self.player2 = Player()
+        self.player3 = Player()
+        self.player4 = Player()
+        # Player home squares
+        self.player1.home = (0,0)
+        self.player2.home = (0,6)
+        self.player3.home = (6,0)
+        self.player4.home = (6,6)
+        # Player initial locations
+        self.player1.location = self.player1.home
+        self.player2.location = self.player2.home
+        self.player3.location = self.player3.home
+        self.player4.location = self.player4.home
+        # Setup Cards
+        self.cards_per_player = len(self.items)
+        shuffle(self.items)
+        hands = [self.items[i::self.num_players] for i in range(0, self.num_players)]
+        try:
+            self.player1.cards = hands[0]
+            self.player2.cards = hands[1]
+            self.player3.cards = hands[2]
+            self.player4.cards = hands[3]
+        except IndexError:
+            pass
+        
 A=NewGame()
 
-A.print_board()
+#~ A.print_board()
 A.setup_tiles()
 A.print_board()
 
