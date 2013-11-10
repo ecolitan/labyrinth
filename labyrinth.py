@@ -1,6 +1,7 @@
 from random import shuffle
 from player import Player
 from tile import BoardTile
+from graph import Graph
 
 class NewGame:
     def __init__(self):
