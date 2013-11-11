@@ -6,6 +6,7 @@ class Graph:
         self.board = board
         self.square = square
         self.graph = {}
+        self.queue = []
         self.build_graph()
        
     def build_graph(self):
@@ -13,30 +14,37 @@ class Graph:
         # http://www.python.org/doc/essays/graphs/
         # Data Structure of Graph
             # graph = {'A': ['B', 'C'],
-            #          'B': ['C', 'D']
-            #         }
+            #          'B': ['C', 'D'],
+            #          'C': ['D'],
+            #          'D': ['C'],
+            #          'E': ['F'],
+            #          'F': ['C']}
             
-        current_square = self.square
-        
-        self.graph[current_square] = []
-        
         # For each exit from square,
         # if exit is not edge,
         # and if square opposite exit has matching exit
         # add that square to list for current square.
         
         # exits = [Up,Right,Down,Left]
-        
-        for index in (0,1,2,3):
-            if self.board[current_square].exits[index]:
-                possible_square = self.find_adjacent_square(self.board[current_square], index)
-                if possible_square is None:
-                    continue
-                if self.path_connects(current_square, possible_square, index):
-                    new_square = possible_square
-                    #TODO check graph if square already exists
-                    #TODO add to queue for future current_squares
-                    self.graph[current_square].append(new_square)
+
+        # Init loop
+        self.queue.push(self.square)
+
+        while len(self.queue) != 0:
+            current_square = self.queue.pop()
+            if self.square_in_graph_index(current_square):
+                continue
+            self.graph[current_square] = []
+            for index in (0,1,2,3):
+                if self.board[current_square].exits[index]:
+                    possible_square = self.find_adjacent_square(self.board[current_square], index)
+                    if possible_square is None:
+                        continue
+                    if self.path_connects(current_square, possible_square, index):
+                        new_square = possible_square
+                        if new_square not in self.queue:
+                            self.queue.push(new_square)
+                        self.graph[current_square].append(new_square)
 
     def find_adjacent_square(self, square, direction):
         """Find coords of the adjacent square in given direction
@@ -63,8 +71,23 @@ class Graph:
         else:
             return False
 
-    def check_square_in_graph(self, square):
-        """Check if a square already exists in the graph
+    def square_in_graph_node(self, square):
+        """Test if square is a node in the graph
         return True or False
         """
-        pass
+        for key in self.graph.keys():
+            if square in self.graph[key]:
+                return True
+            else:
+                return False
+                
+    def square_in_graph_index(self, square):
+        """Test if square is an index in the graph
+        Return True or False
+        """
+        for key in self.graph.keys():
+            if key == square:
+                return True
+            else:
+                return False
+
