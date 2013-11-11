@@ -189,14 +189,3 @@ class NewGame:
             if player.isactive is True:
                 player.cards = hands.pop()        
         
-A=NewGame()
-
-#~ A.print_board()
-A.setup_tiles()
-A.print_board()
-
-#~ B=BoardTile()
-#~ print B
-#~ print B.exits
-#~ B.rotate()
-#~ print B.exits
