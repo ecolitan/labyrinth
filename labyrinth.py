@@ -1,4 +1,5 @@
 # coding: utf8
+
 import pickle
 from random import shuffle
 from player import Player

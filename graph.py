@@ -1,3 +1,5 @@
+# coding: utf8
+
 class Graph:
     def __init__(self, board, square):
         """For a given board position and a square on the board,

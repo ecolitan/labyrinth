@@ -1,3 +1,5 @@
+# coding: utf8
+
 class Player:
     class_counter = 0
     def __init__(self):
