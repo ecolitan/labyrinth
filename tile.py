@@ -15,6 +15,7 @@ class BoardTile:
         self.action = action                              #hidden action on back of some cards
         if random_orientation:
             self.randomise_orientation()
+        self.tile_type = self.determine_tile_type()
         
         self.item_image = {'genie': 'genie-ghost-100px.png',
                             'map': 'map-ghost-100px.png',
@@ -59,3 +60,15 @@ class BoardTile:
         """Randomise the orientation of exits"""
         for _ in range(randint(0,3)):
             self.rotate()
+        
+    def determine_tile_type(self):
+        """Determine type of tile from exits
+        return 'straight'|'corner'|'tee'
+        """
+        if exits in ([True,True,False,False],[False,True,True,False],
+                     [False,False,True,True],[True,False,False,True]):
+            return 'corner'
+        elif exits in ([True,False,True,False],[False,True,False,True]):
+            return 'straight'
+        else:
+            return 'tee'
