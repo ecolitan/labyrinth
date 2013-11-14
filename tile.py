@@ -73,19 +73,18 @@ class BoardTile:
         else:
             return 'tee'
         
-    def tile_orientation(self):
-        """Return the orientation of the tile.
-        This is needed for correctly rotating the tile image
-        Return 0|1|2|3
+    def tile_image_rotation(self):
+        """Return the correct rotation of the tile image.
+        Return 0|90|180|270
         """
         orientations = { '[True,True,False,False]': 0,
-                            '[False,True,True,False]': 1,
-                            '[False,False,True,True]': 2,
-                            '[True,False,False,True]': 3,
+                            '[False,True,True,False]': 90,
+                            '[False,False,True,True]': 180,
+                            '[True,False,False,True]': 270,
                             '[True,False,True,False]': 0,
-                            '[False,True,False,True]': 1,
+                            '[False,True,False,True]': 90,
                             '[True,True,False,True]': 0,
-                            '[True,True,True,False]': 1,
-                            '[False,True,True,True]': 2,
-                            '[True,False,True,True]': 3 }
+                            '[True,True,True,False]': 90,
+                            '[False,True,True,True]': 180,
+                            '[True,False,True,True]': 270 }
         return orientations[str(self.exits)]
