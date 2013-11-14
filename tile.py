@@ -16,6 +16,34 @@ class BoardTile:
         if random_orientation:
             self.randomise_orientation()
         
+        self.item_image = {'genie': 'genie-ghost-100px.png',
+                            'map': 'map-ghost-100px.png',
+                            'book': 'book-ghost-100px.png',
+                            'bat': 'bat-ghost-100px.png',
+                            'skull': 'skull-ghost-100px.png',
+                            'ring': 'ring-ghost-100px.png',
+                            'sword': 'sword-ghost-100px.png',
+                            'candles': 'candles-ghost-100px.png',
+                            'gem': 'gem-ghost-100px.png',
+                            'lizzard': 'lizzard-ghost-100px.png',
+                            'spider': 'spider-ghost-100px.png',
+                            'purse': 'purse-ghost-100px.png',
+                            'chest': 'chest-ghost-100px.png',
+                            'beetle': 'beetle-ghost-100px.png',
+                            'owl': 'owl-ghost-100px.png',
+                            'keys': 'keys-ghost-100px.png',
+                            'dwarf': 'dwarf-ghost-100px.png',
+                            'helmet': 'helmet-ghost-100px.png',
+                            'fairy': 'fairy-ghost-100px.png',
+                            'moth': 'moth-ghost-100px.png',
+                            'dragon': 'dragon-ghost-100px.png',
+                            'mouse': 'mouse-ghost-100px.png',
+                            'ghost': 'ghost-ghost-100px.png',
+                            'crown': 'crown-ghost-100px.png' }
+        self.tile_image = {'straight': 'tile-tftf-100px.png',
+                            'corner': 'tile-ttff-100px.png',
+                            'tee': 'tile-ttft-100px.png' }
+        
     def __repr__(self):
         return self.item
         
