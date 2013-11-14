@@ -1,13 +1,21 @@
 # coding: utf8
 
+import sys
+import pygame
+from pygame.locals import *
 from random import shuffle
 from player import Player
 from tile import BoardTile
 from graph import Graph
 
+if not pygame.font: print 'Warning, fonts disabled'
+if not pygame.mixer: print 'Warning, sound disabled'
+
 class NewGame:
     def __init__(self):
         """Setup the game"""
+        
+        pygame.init()
         
         # Board Grid
         self.board = { (0,0): None, (0,1): None, (0,2): None, (0,3): None, (0,4): None, (0,5): None, (0,6): None,
@@ -190,7 +198,7 @@ class NewGame:
         for player in [self.player1, self.player2, self.player3, self.player4]:
             if player.isactive is True:
                 player.cards = hands.pop()        
-        
-A=NewGame()
-#~ A.setup_tiles()
-#~ A.print_board_pickle()
+
+if __name__ == "__main__":
+    MainWindow = NewGame()
+    #~ MainWindow.MainLoop()        
