@@ -1,6 +1,5 @@
 # coding: utf8
 
-import pickle
 from random import shuffle
 from player import Player
 from tile import BoardTile
@@ -54,12 +53,6 @@ class NewGame:
             print
             i += 7; j += 7
         print
-        
-    def print_board_pickle(self):
-        """Print pickle of board
-        Used for testing only.
-        """
-        print pickle.dumps(self.board, pickle.HIGHEST_PROTOCOL)
         
     def push_in(self, push_in_square, tile):
         """Push tile into push_square
