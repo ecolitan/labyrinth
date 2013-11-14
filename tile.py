@@ -65,10 +65,27 @@ class BoardTile:
         """Determine type of tile from exits
         return 'straight'|'corner'|'tee'
         """
-        if exits in ([True,True,False,False],[False,True,True,False],
+        if self.exits in ([True,True,False,False],[False,True,True,False],
                      [False,False,True,True],[True,False,False,True]):
             return 'corner'
         elif exits in ([True,False,True,False],[False,True,False,True]):
             return 'straight'
         else:
             return 'tee'
+        
+    def tile_orientation(self):
+        """Return the orientation of the tile.
+        This is needed for correctly rotating the tile image
+        Return 0|1|2|3
+        """
+        orientations = { '[True,True,False,False]': 0,
+                            '[False,True,True,False]': 1,
+                            '[False,False,True,True]': 2,
+                            '[True,False,False,True]': 3,
+                            '[True,False,True,False]': 0,
+                            '[False,True,False,True]': 1,
+                            '[True,True,False,True]': 0,
+                            '[True,True,True,False]': 1,
+                            '[False,True,True,True]': 2,
+                            '[True,False,True,True]': 3 }
+        return orientations[str(self.exits)]
