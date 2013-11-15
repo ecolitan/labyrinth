@@ -68,7 +68,7 @@ class BoardTile:
         if self.exits in ([True,True,False,False],[False,True,True,False],
                      [False,False,True,True],[True,False,False,True]):
             return 'corner'
-        elif exits in ([True,False,True,False],[False,True,False,True]):
+        elif self.exits in ([True,False,True,False],[False,True,False,True]):
             return 'straight'
         else:
             return 'tee'
@@ -77,14 +77,14 @@ class BoardTile:
         """Return the correct rotation of the tile image.
         Return 0|90|180|270
         """
-        orientations = { '[True,True,False,False]': 0,
-                            '[False,True,True,False]': 90,
-                            '[False,False,True,True]': 180,
-                            '[True,False,False,True]': 270,
-                            '[True,False,True,False]': 0,
-                            '[False,True,False,True]': 90,
-                            '[True,True,False,True]': 0,
-                            '[True,True,True,False]': 90,
-                            '[False,True,True,True]': 180,
-                            '[True,False,True,True]': 270 }
-        return orientations[str(self.exits)]
+        orientations = {    tuple([True,True,False,False]): 0,
+                            tuple([False,True,True,False]): 90,
+                            tuple([False,False,True,True]): 180,
+                            tuple([True,False,False,True]): 270,
+                            tuple([True,False,True,False]): 0,
+                            tuple([False,True,False,True]): 90,
+                            tuple([True,True,False,True]): 0,
+                            tuple([True,True,True,False]): 90,
+                            tuple([False,True,True,True]): 180,
+                            tuple([True,False,True,True]): 270 }
+        return orientations[tuple(self.exits)]
