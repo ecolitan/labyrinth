@@ -2,6 +2,7 @@
 
 import sys
 import pygame
+import os
 from pygame.locals import *
 from random import shuffle
 from player import Player
@@ -14,8 +15,6 @@ if not pygame.mixer: print 'Warning, sound disabled'
 class NewGame:
     def __init__(self):
         """Setup the game"""
-        
-        pygame.init()
         
         # Board Grid
         self.board = { (0,0): None, (0,1): None, (0,2): None, (0,3): None, (0,4): None, (0,5): None, (0,6): None,
@@ -48,11 +47,63 @@ class NewGame:
         self.last_pushed_in = (0,0)         #update every move
         self.num_players = 3                #2,3,4 players
         
-        # Initialise Players
+        # Initialise Game
         self.init_players()
+        self.setup_tiles()
+        self.setup_pygame()
+        self.game_loop()
+        
+    def setup_pygame(self):
+        # Initialise PyGame Variables
+        pygame.init()
+        self.mainscreen_size = (1100, 900)
+        self.background_color = (127,255,212)
+        self.screen = pygame.display.set_mode(self.mainscreen_size, RESIZABLE)
+        self.board_area_x_offset = 300
+        self.board_area_y_offset = 100
+        self.board_area = self.screen.subsurface(
+            Rect(self.board_area_x_offset,self.board_area_y_offset,700,700))
+        
+        self.tilerect = {}
+        for square in self.board.keys():
+            self.tilerect[square] = Rect(square[0]*100,square[1]*100,100,100)
+            
+    def game_loop(self):
+        while 1:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                if event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        mouse_x, mouse_y = event.pos
+                        print mouse_x, mouse_y
+                        
+                self.screen.fill(self.background_color)
+                
+                tile_image = {}
+                tilerect = {}
+                
+                for square in self.board:
+                    tile = self.board[square]
+                    tile_image[square] = pygame.image.load(
+                        os.path.join('images', tile.tile_image[tile.determine_tile_type()]))
+                    tile_rotation = tile.tile_image_rotation()
+                    tilerect[square] = Rect(square[0]*100,square[1]*100,100,100)
+                    
+                    final_tile = pygame.transform.rotate(tile_image[square], tile_rotation)
+                    
+                    self.board_area.blit(final_tile, tilerect[square])
+                pygame.display.flip()
+            #~ break
+        
+    def test_mouse_click_collides(self):
+        """Test if mouse clicks on a tile
+        Return tilerect or False
+        """
+        pass
         
     def print_board(self):
-        """Print representation of the board"""
+        """Print text representation of the board"""
         keys = sorted(self.board.keys())
         i, j = (0,7)
         while j < 50:
