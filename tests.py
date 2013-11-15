@@ -40,7 +40,6 @@ class TestTile(unittest.TestCase):
             self.assertEqual(rotation, test_tile.exits)
         
     def test_randomise_orientation(self):
-        pass
         rotation_counter = { str([False,True,True,False]):0.0,
                              str([False,False,True,True]):0.0,
                              str([True,False,False,True]):0.0,
@@ -55,6 +54,17 @@ class TestTile(unittest.TestCase):
         std_deviation = (sum([j**2 for j in [i - mean for i in counts]])/len(counts))**0.5
         p = std_deviation/num_trials
         self.assertTrue(p<0.05, 'p value was ' + str(p))
+        
+    def test_determine_tile_type(self):
+        self.assertEqual('corner', BoardTile([True,True,False,False]).determine_tile_type())
+        self.assertEqual('straight', BoardTile([False,True,False,True]).determine_tile_type())
+        self.assertEqual('tee', BoardTile([True,True,True,False]).determine_tile_type())
+        
+    def test_tile_image_rotation(self):
+        corner_tile = BoardTile([True,True,False,False])
+        self.assertEqual(0, corner_tile.tile_image_rotation())
+        corner_tile.rotate()
+        self.assertEqual(90, corner_tile.tile_image_rotation())
 
 class TestGraph(unittest.TestCase):
     def setUp(self):
