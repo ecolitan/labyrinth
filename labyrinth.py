@@ -16,15 +16,14 @@ class NewGame:
     def __init__(self):
         """Setup the game"""
         
-        # Board Grid
-        self.board = { (0,0): None, (0,1): None, (0,2): None, (0,3): None, (0,4): None, (0,5): None, (0,6): None,
-                       (1,0): None, (1,1): None, (1,2): None, (1,3): None, (1,4): None, (1,5): None, (1,6): None,
-                       (2,0): None, (2,1): None, (2,2): None, (2,3): None, (2,4): None, (2,5): None, (2,6): None,
-                       (3,0): None, (3,1): None, (3,2): None, (3,3): None, (3,4): None, (3,5): None, (3,6): None,
-                       (4,0): None, (4,1): None, (4,2): None, (4,3): None, (4,4): None, (4,5): None, (4,6): None,
-                       (5,0): None, (5,1): None, (5,2): None, (5,3): None, (5,4): None, (5,5): None, (5,6): None,
-                       (6,0): None, (6,1): None, (6,2): None, (6,3): None, (6,4): None, (6,5): None, (6,6): None,}
-        
+        # Board Grid (x right, y down)       
+        self.board = { (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
+                       (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
+                       (0,2): None, (1,2): None, (2,2): None, (3,2): None, (4,2): None, (5,2): None, (6,2): None,
+                       (0,3): None, (1,3): None, (2,3): None, (3,3): None, (4,3): None, (5,3): None, (6,3): None,
+                       (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
+                       (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
+                       (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,}
         
         # List of items in game
         self.items = ['genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
@@ -70,6 +69,7 @@ class NewGame:
             
     def game_loop(self):
         while 1:
+            pygame.time.wait(1000)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -80,19 +80,19 @@ class NewGame:
                         
                 self.screen.fill(self.background_color)
                 
-                tile_image = {}
-                tilerect = {}
-                
                 for square in self.board:
                     tile = self.board[square]
-                    tile_image[square] = pygame.image.load(
-                        os.path.join('images', tile.tile_image[tile.determine_tile_type()]))
+                    tile_image = pygame.image.load(
+                        os.path.join('images', tile.tile_image))
                     tile_rotation = tile.tile_image_rotation()
-                    tilerect[square] = Rect(square[0]*100,square[1]*100,100,100)
+                    tilerect = Rect(square[0]*100,square[1]*100,100,100)
                     
-                    final_tile = pygame.transform.rotate(tile_image[square], tile_rotation)
+                    final_tile = pygame.transform.rotate(tile_image, tile_rotation)
                     
-                    self.board_area.blit(final_tile, tilerect[square])
+                    self.board_area.blit(final_tile, tilerect)
+
+                    print square, tile.exits, tile.tile_image, tile_rotation
+
                 pygame.display.flip()
             #~ break
         
@@ -157,22 +157,23 @@ class NewGame:
         actions_list = [j for k in [[i,i] for i in self.actions] for j in k]   #each action twice
         shuffle(items_list)
         shuffle(actions_list)
-
+        
         ## Fixed Cards
         #corners
         self.board[(0,0)] = BoardTile([False,True,True,False])
-        self.board[(0,6)] = BoardTile([False,False,True,True])
+        self.board[(0,6)] = BoardTile([True,True,False,False])
         self.board[(6,6)] = BoardTile([True,False,False,True])
-        self.board[(6,0)] = BoardTile([True,True,False,False])
+        self.board[(6,0)] = BoardTile([False,False,True,True])
         #edges
-        self.board[(0,2)] = BoardTile([False,True,True,True], item=items_list.pop())
-        self.board[(0,4)] = BoardTile([False,True,True,True], item=items_list.pop())
-        self.board[(2,6)] = BoardTile([True,False,True,True], item=items_list.pop())
-        self.board[(4,6)] = BoardTile([True,False,True,True], item=items_list.pop())
-        self.board[(6,4)] = BoardTile([True,True,False,True], item=items_list.pop())
-        self.board[(6,2)] = BoardTile([True,True,False,True], item=items_list.pop())
-        self.board[(2,0)] = BoardTile([True,True,True,False], item=items_list.pop())
-        self.board[(4,0)] = BoardTile([True,True,True,False], item=items_list.pop())
+        self.board[(0,2)] = BoardTile([True,True,True,False], item=items_list.pop())
+        self.board[(2,0)] = BoardTile([False,True,True,True], item=items_list.pop())
+        self.board[(4,0)] = BoardTile([False,True,True,True], item=items_list.pop())
+        self.board[(0,4)] = BoardTile([True,True,True,False], item=items_list.pop())
+        self.board[(6,2)] = BoardTile([True,False,True,True], item=items_list.pop())
+        self.board[(2,6)] = BoardTile([True,True,False,True], item=items_list.pop())
+        self.board[(6,4)] = BoardTile([True,False,True,True], item=items_list.pop())
+        self.board[(4,6)] = BoardTile([True,True,False,True], item=items_list.pop())
+        
         #centers
         self.board[(2,2)] = BoardTile([False,True,True,True], item=items_list.pop(), random_orientation=True)
         self.board[(4,2)] = BoardTile([False,True,True,True], item=items_list.pop(), random_orientation=True)
