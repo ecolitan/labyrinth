@@ -17,7 +17,7 @@ class BoardTile:
             self.randomise_orientation()
         self.tile_type = self.determine_tile_type()
         
-        self.item_image = {'genie': 'genie-ghost-100px.png',
+        self.item_images = {'genie': 'genie-ghost-100px.png',
                             'map': 'map-ghost-100px.png',
                             'book': 'book-ghost-100px.png',
                             'bat': 'bat-ghost-100px.png',
@@ -41,9 +41,14 @@ class BoardTile:
                             'mouse': 'mouse-ghost-100px.png',
                             'ghost': 'ghost-ghost-100px.png',
                             'crown': 'crown-ghost-100px.png' }
-        self.tile_image = {'straight': 'tile-tftf-100px.png',
+        self.tile_images = {'straight': 'tile-tftf-100px.png',
                             'corner': 'tile-ttff-100px.png',
                             'tee': 'tile-ttft-100px.png' }
+        self.tile_image = self.tile_images[self.tile_type]
+        if self.item:
+            self.item_image = self.item_images[self.item]
+        else:
+            self.item_image = None
         
     def __repr__(self):
         return self.item
@@ -78,13 +83,14 @@ class BoardTile:
         Return 0|90|180|270
         """
         orientations = {    tuple([True,True,False,False]): 0,
-                            tuple([False,True,True,False]): 90,
-                            tuple([False,False,True,True]): 180,
-                            tuple([True,False,False,True]): 270,
+                            tuple([False,True,True,False]): -90,
+                            tuple([False,False,True,True]): -180,
+                            tuple([True,False,False,True]): -270,
                             tuple([True,False,True,False]): 0,
-                            tuple([False,True,False,True]): 90,
+                            tuple([False,True,False,True]): -90,
                             tuple([True,True,False,True]): 0,
-                            tuple([True,True,True,False]): 90,
-                            tuple([False,True,True,True]): 180,
-                            tuple([True,False,True,True]): 270 }
+                            tuple([True,True,True,False]): -90,
+                            tuple([False,True,True,True]): -180,
+                            tuple([True,False,True,True]): -270 }
         return orientations[tuple(self.exits)]
+        
