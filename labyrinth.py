@@ -57,7 +57,7 @@ class NewGame:
         pygame.init()
         self.mainscreen_size = (1100, 900)
         self.background_color = (127,255,212)
-        self.screen = pygame.display.set_mode(self.mainscreen_size, RESIZABLE)
+        self.screen = pygame.display.set_mode(self.mainscreen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
         self.board_area_x_offset = 300
         self.board_area_y_offset = 100
         self.board_area = self.screen.subsurface(
@@ -69,15 +69,20 @@ class NewGame:
             
     def game_loop(self):
         while 1:
-            pygame.time.wait(1000)
+            #~ pygame.time.wait(100)
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
-                if event.type == MOUSEBUTTONDOWN:
+                elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
                         print mouse_x, mouse_y
-                        
+                #TODO resize window.
+                #http://stackoverflow.com/questions/20002242/how-to-scale-images-to-screen-size-in-pygame
+                #~ elif event.type == VIDEORESIZE:
+                    #~ self.screen = pygame.display.set_mode(
+                        #~ event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
+                    
                 self.screen.fill(self.background_color)
                 
                 for square in self.board:
@@ -91,7 +96,7 @@ class NewGame:
                     
                     self.board_area.blit(final_tile, tilerect)
 
-                    print square, tile.exits, tile.tile_image, tile_rotation
+                    #~ print square, tile.exits, tile.tile_image, tile_rotation
 
                 pygame.display.flip()
             #~ break
