@@ -6,17 +6,29 @@ class BoardTile:
     class_counter = 0
     def __init__(self, exits, item=None, action=None, random_orientation=False):
         """A single square on the board"""
+        
+        # Incrementing object id
         self.id = BoardTile.class_counter
         BoardTile.class_counter += 1
         
+        # Basic tile attributes
         self.is_occupied = False
         self.item = item
         self.exits = exits                                # [Top,Right,Down,Left]
-        self.action = action                              #hidden action on back of some cards
+        self.action = action                              # hidden action on back of some cards
+        
+        # Set orientation
         if random_orientation:
             self.randomise_orientation()
-        self.tile_type = self.determine_tile_type()
         
+        # Set tile image attribute
+        self.tile_type = self.determine_tile_type()
+        self.tile_images = {'straight': 'tile-tftf-100px.png',
+                            'corner': 'tile-ttff-100px.png',
+                            'tee': 'tile-ttft-100px.png' }
+        self.tile_image = self.tile_images[self.tile_type]
+        
+        # Set item image attrribute
         self.item_images = {'genie': 'genie-ghost-100px.png',
                             'map': 'map-ghost-100px.png',
                             'book': 'book-ghost-100px.png',
@@ -41,15 +53,11 @@ class BoardTile:
                             'mouse': 'mouse-ghost-100px.png',
                             'ghost': 'ghost-ghost-100px.png',
                             'crown': 'crown-ghost-100px.png' }
-        self.tile_images = {'straight': 'tile-tftf-100px.png',
-                            'corner': 'tile-ttff-100px.png',
-                            'tee': 'tile-ttft-100px.png' }
-        self.tile_image = self.tile_images[self.tile_type]
         if self.item:
             self.item_image = self.item_images[self.item]
         else:
             self.item_image = None
-        
+            
     def __repr__(self):
         return self.item
         
