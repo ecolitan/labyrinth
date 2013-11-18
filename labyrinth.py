@@ -16,6 +16,9 @@ class NewGame:
     def __init__(self):
         """Setup the game"""
         
+        # Misc Variables
+        self.image_dir = 'images'
+        
         # Board Grid (x right, y down)       
         self.board = { (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
                        (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
@@ -49,6 +52,7 @@ class NewGame:
         # Initialise Game
         self.init_players()
         self.setup_tiles()
+        self.load_images()
         self.setup_pygame()
         self.game_loop()
         
@@ -70,6 +74,8 @@ class NewGame:
     def game_loop(self):
         while 1:
             #~ pygame.time.wait(100)
+            #TODO fix cpu usage in loop
+            #http://www.gamedev.net/topic/518494-pygame-eating-up-my-cpu/
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -87,8 +93,9 @@ class NewGame:
                 
                 for square in self.board:
                     tile = self.board[square]
-                    tile_image = pygame.image.load(
-                        os.path.join('images', tile.tile_image))
+                    #~ tile_image = pygame.image.load(
+                        #~ os.path.join('images', tile.tile_image))
+                    tile_image = pygame.image.fromstring(self.image_buffer[tile.tile_type], (100,100), "RGBA")
                     tile_rotation = tile.tile_image_rotation()
                     tilerect = Rect(square[0]*100,square[1]*100,100,100)
                     
@@ -230,6 +237,7 @@ class NewGame:
         
     def init_players(self):
         """Initialise the players"""
+        
         ## Setup players
         self.player1 = Player()
         self.player2 = Player()
@@ -255,7 +263,45 @@ class NewGame:
         for player in [self.player1, self.player2, self.player3, self.player4]:
             if player.isactive is True:
                 player.cards = hands.pop()        
-
+        
+    def load_images(self):
+        """Load tile images into string buffers"""
+        
+        image_path = {
+                            'genie': os.path.join(self.image_dir, 'item-genie-100px.png'),
+                            'map': os.path.join(self.image_dir, 'item-map-100px.png'),
+                            'book': os.path.join(self.image_dir, 'item-book-100px.png'),
+                            'bat': os.path.join(self.image_dir, 'item-bat-100px.png'),
+                            'skull': os.path.join(self.image_dir, 'item-skull-100px.png'),
+                            'ring': os.path.join(self.image_dir, 'item-ring-100px.png'),
+                            'sword': os.path.join(self.image_dir, 'item-sword-100px.png'),
+                            'candles': os.path.join(self.image_dir, 'item-candles-100px.png'),
+                            'gem': os.path.join(self.image_dir, 'item-gem-100px.png'),
+                            'lizzard': os.path.join(self.image_dir, 'item-lizzard-100px.png'),
+                            'spider': os.path.join(self.image_dir, 'item-spider-100px.png'),
+                            'purse': os.path.join(self.image_dir, 'item-purse-100px.png'),
+                            'chest': os.path.join(self.image_dir, 'item-chest-100px.png'),
+                            'beetle': os.path.join(self.image_dir, 'item-beetle-100px.png'),
+                            'owl': os.path.join(self.image_dir, 'item-owl-100px.png'),
+                            'keys': os.path.join(self.image_dir, 'item-keys-100px.png'),
+                            'dwarf': os.path.join(self.image_dir, 'item-dwarf-100px.png'),
+                            'helmet': os.path.join(self.image_dir, 'item-helmet-100px.png'),
+                            'fairy': os.path.join(self.image_dir, 'item-fairy-100px.png'),
+                            #~ 'moth': os.path.join(self.image_dir, 'item-moth-100px.png'),
+                            #~ 'dragon': os.path.join(self.image_dir, 'item-dragon-100px.png'),
+                            'mouse': os.path.join(self.image_dir, 'item-mouse-100px.png'),
+                            'ghost': os.path.join(self.image_dir, 'item-ghost-100px.png'),
+                            'crown': os.path.join(self.image_dir, 'item-crown-100px.png'),
+                            'straight': os.path.join(self.image_dir, 'tile-tftf-100px.png'),
+                            'corner': os.path.join(self.image_dir, 'tile-ttff-100px.png'),
+                            'tee': os.path.join(self.image_dir, 'tile-ttft-100px.png') }
+        image_surface = {}
+        for image in image_path.keys():
+            image_surface[image] = pygame.image.load(image_path[image])
+        self.image_buffer = {}
+        for surface in image_surface.keys():
+            self.image_buffer[surface] = pygame.image.tostring(image_surface[surface], "RGBA")
+        
 if __name__ == "__main__":
     MainWindow = NewGame()
     #~ MainWindow.MainLoop()        
