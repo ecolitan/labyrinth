@@ -72,43 +72,56 @@ class NewGame:
             self.tilerect[square] = Rect(square[0]*100,square[1]*100,100,100)
             
     def game_loop(self):
+        self.display_everything()
         while 1:
             #~ pygame.time.wait(100)
             #TODO fix cpu usage in loop
             #http://www.gamedev.net/topic/518494-pygame-eating-up-my-cpu/
+            
             for event in pygame.event.get():
+                if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN]:
+                    continue 
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
                         print mouse_x, mouse_y
-                #TODO resize window.
+                #TODO enable resize window.
                 #http://stackoverflow.com/questions/20002242/how-to-scale-images-to-screen-size-in-pygame
                 #~ elif event.type == VIDEORESIZE:
                     #~ self.screen = pygame.display.set_mode(
                         #~ event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
                     
-                self.screen.fill(self.background_color)
-                
-                for square in self.board:
-                    # Tiles
-                    tile = self.board[square]
-                    tile_image = pygame.image.fromstring(self.image_buffer[tile.tile_type], (100,100), "RGBA")
-                    tile_rotation = tile.tile_image_rotation()
-                    tilerect = Rect(square[0]*100,square[1]*100,100,100)
-                    final_tile = pygame.transform.rotate(tile_image, tile_rotation)
-                    self.board_area.blit(final_tile, tilerect)
+                self.display_everything()
+        
+    def display_everything(self):
+        """Draw everything to the screen"""
+        
+        # Background
+        self.screen.fill(self.background_color)
+        
+        # Board
+        for square in self.board:
+            # Tiles
+            tile = self.board[square]
+            tile_image = pygame.image.fromstring(self.image_buffer[tile.tile_type], (100,100), "RGBA")
+            tile_rotation = tile.tile_image_rotation()
+            tilerect = Rect(square[0]*100,square[1]*100,100,100)
+            final_tile = pygame.transform.rotate(tile_image, tile_rotation)
+            self.board_area.blit(final_tile, tilerect)
 
-                    # Items
-                    if self.board[square].item:
-                        item = self.board[square].item
-                        item_image = pygame.image.fromstring(self.image_buffer[item], (100,100), "RGBA")
-                        itemrect = Rect(square[0]*100,square[1]*100,100,100)
-                        self.board_area.blit(item_image, itemrect)
-                    
-                pygame.display.flip()
-            #~ break
+            # Items
+            if self.board[square].item:
+                item = self.board[square].item
+                item_image = pygame.image.fromstring(self.image_buffer[item], (100,100), "RGBA")
+                itemrect = Rect(square[0]*100,square[1]*100,100,100)
+                self.board_area.blit(item_image, itemrect)
+        
+        # Menu
+        
+        # Update display
+        pygame.display.flip()
         
     def test_mouse_click_collides(self):
         """Test if mouse clicks on a tile
