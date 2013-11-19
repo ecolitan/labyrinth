@@ -52,7 +52,11 @@ class BoardTile:
                             'dragon': 'dragon-ghost-100px.png',
                             'mouse': 'mouse-ghost-100px.png',
                             'ghost': 'ghost-ghost-100px.png',
-                            'crown': 'crown-ghost-100px.png' }
+                            'crown': 'crown-ghost-100px.png',
+                            'home-red': 'home-red-100px.png',
+                            'home-green': 'home-green-100px.png',
+                            'home-blue': 'home-blue-100px.png',
+                            'home-yellow': 'home-yellow-100px.png' }
         if self.item:
             self.item_image = self.item_images[self.item]
         else:

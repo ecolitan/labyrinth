@@ -35,6 +35,7 @@ class NewGame:
                       'moth', 'dragon', 'mouse', 'ghost', 'crown']
         self.actions = ['second_push', 'two_turns', 'swap_figures',
                         'see_two_cards', 'swap_card', 'through_wall']
+        self.player_home_colors = ['home-red', 'home-yellow', 'home-green', 'home-blue']
         self.allowed_push_in_squares = ( (0,1),(0,3),(0,5),(1,0),(3,0),(5,0),
                                          (6,1),(6,3),(6,5),(1,6),(3,6),(5,6) )
         self.fixed_squares = ( (0,0), (2,0), (4,0), (6,0),
@@ -105,6 +106,7 @@ class NewGame:
         for square in self.board:
             # Tiles
             tile = self.board[square]
+            #~ print square
             tile_image = pygame.image.fromstring(self.image_buffer[tile.tile_type], (100,100), "RGBA")
             tile_rotation = tile.tile_image_rotation()
             tilerect = Rect(square[0]*100,square[1]*100,100,100)
@@ -119,6 +121,9 @@ class NewGame:
                 self.board_area.blit(item_image, itemrect)
         
         # Menu
+        myfont = pygame.font.SysFont("monospace", 15)
+        label = myfont.render("Some text!", 1, (0,0,0))
+        self.screen.blit(label, (100, 100))
         
         # Update display
         pygame.display.flip()
@@ -182,6 +187,7 @@ class NewGame:
         
         items_list = [i for i in self.items]                                   #each item once
         actions_list = [j for k in [[i,i] for i in self.actions] for j in k]   #each action twice
+        colors_list = [i for i in self.player_home_colors]                          #each color once
         shuffle(items_list)
         shuffle(actions_list)
         
@@ -191,6 +197,7 @@ class NewGame:
         self.board[(0,6)] = BoardTile([True,True,False,False])
         self.board[(6,6)] = BoardTile([True,False,False,True])
         self.board[(6,0)] = BoardTile([False,False,True,True])
+        
         #edges
         self.board[(0,2)] = BoardTile([True,True,True,False], item=items_list.pop())
         self.board[(2,0)] = BoardTile([False,True,True,True], item=items_list.pop())
@@ -240,6 +247,10 @@ class NewGame:
         
         #Remaining tile is the start tile
         self.current_tile = tiles.pop()
+        
+        # Set player home squares
+        for square in ( (0,0), (0,6), (6,6), (6,0) ):
+            self.board[square].item = colors_list.pop()
         
     def path_exists(self, square1, square2):
         """Determine if a path exists between two squares
@@ -309,7 +320,11 @@ class NewGame:
                             'crown': os.path.join(self.image_dir, 'item-crown-100px.png'),
                             'straight': os.path.join(self.image_dir, 'tile-tftf-100px.png'),
                             'corner': os.path.join(self.image_dir, 'tile-ttff-100px.png'),
-                            'tee': os.path.join(self.image_dir, 'tile-ttft-100px.png') }
+                            'tee': os.path.join(self.image_dir, 'tile-ttft-100px.png'),
+                            'home-red': os.path.join(self.image_dir, 'home-red-100px.png'),
+                            'home-green': os.path.join(self.image_dir, 'home-green-100px.png'),
+                            'home-blue': os.path.join(self.image_dir, 'home-blue-100px.png'),
+                            'home-yellow': os.path.join(self.image_dir, 'home-yellow-100px.png') }
         image_surface = {}
         for image in image_path.keys():
             image_surface[image] = pygame.image.load(image_path[image])
