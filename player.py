@@ -9,6 +9,7 @@ class Player:
         self.isactive = False
         self.name = ''
         self.color = ''
+        self.cards = []
         
     def __str__(self):
         return self.name
