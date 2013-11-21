@@ -86,6 +86,20 @@ class NewGame:
         for square in self.board.keys():
             self.tilerect[square] = Rect(square[0]*100,square[1]*100,100,100)
             
+        self.game_push_in_map = {(400, 800): (3, 6),
+                                 (800, 600): (6, 5),
+                                 (200, 0):   (1, 0),
+                                 (200, 800): (1, 6),
+                                 (800, 400): (6, 3),
+                                 (0, 600):   (0, 5),
+                                 (0, 200):   (0, 1),
+                                 (0, 400):   (0, 3),
+                                 (800, 200): (6, 1),
+                                 (400, 0):   (3, 0),
+                                 (600, 800): (5, 6),
+                                 (600, 0):   (5, 0) }
+
+            
     def game_loop(self):
         self.display_everything()
         while 1:
@@ -102,6 +116,7 @@ class NewGame:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
                         print mouse_x, mouse_y
+                        
                 #TODO enable resize window.
                 #http://stackoverflow.com/questions/20002242/how-to-scale-images-to-screen-size-in-pygame
                 #~ elif event.type == VIDEORESIZE:
@@ -143,7 +158,9 @@ class NewGame:
         basecard_image = pygame.image.fromstring(self.image_buffer['basecard'], (100,100), "RGBA")
         basecard_rect = Rect(50,25,100,100)
         self.menu_area.blit(basecard_image, basecard_rect)
-        
+        player_item = self.current_player.cards[0]
+        player_item_image = pygame.image.fromstring(self.image_buffer[item], (100,100), "RGBA")
+        self.menu_area.blit(player_item_image, basecard_rect)
         
         # Update display
         pygame.display.flip()
