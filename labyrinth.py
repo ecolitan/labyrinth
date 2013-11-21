@@ -58,15 +58,29 @@ class NewGame:
         self.game_loop()
         
     def setup_pygame(self):
+        """Setup Variables, Surfaces ,etc. for pygame"""
+        
         # Initialise PyGame Variables
         pygame.init()
         self.mainscreen_size = (1100, 900)
         self.background_color = (127,255,212)
-        self.screen = pygame.display.set_mode(self.mainscreen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
-        self.board_area_x_offset = 300
+        self.screen = pygame.display.set_mode(
+            self.mainscreen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
+        
+        self.game_area_x_offset = 200
+        self.game_area_y_offset = 0
+        self.game_area = self.screen.subsurface(
+            Rect(self.game_area_x_offset,self.game_area_y_offset,900,900))
+        
+        self.board_area_x_offset = 100
         self.board_area_y_offset = 100
-        self.board_area = self.screen.subsurface(
+        self.board_area = self.game_area.subsurface(
             Rect(self.board_area_x_offset,self.board_area_y_offset,700,700))
+            
+        self.menu_area_x_offset = 0
+        self.menu_area_y_offset = 0
+        self.menu_area = self.screen.subsurface(
+            Rect(self.menu_area_x_offset,self.menu_area_y_offset,200,900))
         
         self.tilerect = {}
         for square in self.board.keys():
@@ -121,9 +135,15 @@ class NewGame:
                 self.board_area.blit(item_image, itemrect)
         
         # Menu
-        myfont = pygame.font.SysFont("monospace", 15)
-        label = myfont.render("Some text!", 1, (0,0,0))
-        self.screen.blit(label, (100, 100))
+        #~ myfont = pygame.font.SysFont("monospace", 15)
+        #~ label = myfont.render("Some text!", 1, (0,0,0))
+        #~ self.screen.blit(label, (100, 100))
+        
+        # Current Card
+        basecard_image = pygame.image.fromstring(self.image_buffer['basecard'], (100,100), "RGBA")
+        basecard_rect = Rect(50,25,100,100)
+        self.menu_area.blit(basecard_image, basecard_rect)
+        
         
         # Update display
         pygame.display.flip()
@@ -264,6 +284,7 @@ class NewGame:
     def init_players(self):
         """Initialise the players"""
         
+        self.active_players = []
         ## Setup players
         self.player1 = Player()
         self.player2 = Player()
@@ -288,7 +309,10 @@ class NewGame:
         hands = [self.items[i::self.num_players] for i in range(0, self.num_players)]
         for player in [self.player1, self.player2, self.player3, self.player4]:
             if player.isactive is True:
-                player.cards = hands.pop()        
+                self.active_players.append(player)
+                player.cards = hands.pop()
+        # Current Player to go
+        self.current_player = self.active_players[0]
         
     def load_images(self):
         """Load tile images into string buffers"""
@@ -324,7 +348,8 @@ class NewGame:
                             'home-red': os.path.join(self.image_dir, 'home-red-100px.png'),
                             'home-green': os.path.join(self.image_dir, 'home-green-100px.png'),
                             'home-blue': os.path.join(self.image_dir, 'home-blue-100px.png'),
-                            'home-yellow': os.path.join(self.image_dir, 'home-yellow-100px.png') }
+                            'home-yellow': os.path.join(self.image_dir, 'home-yellow-100px.png'),
+                            'basecard': os.path.join(self.image_dir, 'basecard-100px.png') }
         image_surface = {}
         for image in image_path.keys():
             image_surface[image] = pygame.image.load(image_path[image])
