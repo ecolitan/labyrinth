@@ -64,6 +64,8 @@ class NewGame:
         pygame.init()
         self.mainscreen_size = (1100, 900)
         self.background_color = (127,255,212)
+        self.is_hover = False
+        
         self.screen = pygame.display.set_mode(
             self.mainscreen_size, HWSURFACE | DOUBLEBUF | RESIZABLE)
         
@@ -98,17 +100,22 @@ class NewGame:
                                  (400, 0):   (3, 0),
                                  (600, 800): (5, 6),
                                  (600, 0):   (5, 0) }
-
-            
+        self.game_push_in_rects = (Rect(400, 800, 100, 100), Rect(800, 600, 100, 100),
+                                   Rect(200, 0, 100, 100), Rect(200, 800, 100, 100),
+                                   Rect(800, 400, 100, 100), Rect(0, 600, 100, 100),
+                                   Rect(0, 200, 100, 100), Rect(0, 400, 100, 100),
+                                   Rect(800, 200, 100, 100), Rect(400, 0, 100, 100),
+                                   Rect(600, 800, 100, 100), Rect(600, 0, 100, 100) )
     def game_loop(self):
         self.display_everything()
         while 1:
-            #~ pygame.time.wait(100)
+            pygame.time.wait(100)
             #TODO fix cpu usage in loop
             #http://www.gamedev.net/topic/518494-pygame-eating-up-my-cpu/
             
             for event in pygame.event.get():
-                if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN]:
+                #~ print event.type, event
+                if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN, MOUSEMOTION]:
                     continue 
                 if event.type == pygame.QUIT:
                     sys.exit()
@@ -116,7 +123,13 @@ class NewGame:
                     if event.button == 1:
                         mouse_x, mouse_y = event.pos
                         print mouse_x, mouse_y
-                        
+                elif event.type == MOUSEMOTION:
+                    is_hover = self.mouse_over_push_in(event.pos)
+                    if is_hover[0]:
+                        self.is_hover = is_hover[1]
+                    else:
+                        self.is_hover = False    
+                    
                 #TODO enable resize window.
                 #http://stackoverflow.com/questions/20002242/how-to-scale-images-to-screen-size-in-pygame
                 #~ elif event.type == VIDEORESIZE:
@@ -136,7 +149,8 @@ class NewGame:
             # Tiles
             tile = self.board[square]
             #~ print square
-            tile_image = pygame.image.fromstring(self.image_buffer[tile.tile_type], (100,100), "RGBA")
+            tile_image = pygame.image.fromstring(
+                self.image_buffer[tile.tile_type], (100,100), "RGBA")
             tile_rotation = tile.tile_image_rotation()
             tilerect = Rect(square[0]*100,square[1]*100,100,100)
             final_tile = pygame.transform.rotate(tile_image, tile_rotation)
@@ -145,9 +159,23 @@ class NewGame:
             # Items
             if self.board[square].item:
                 item = self.board[square].item
-                item_image = pygame.image.fromstring(self.image_buffer[item], (100,100), "RGBA")
+                
+                item_image = pygame.image.fromstring(
+                    self.image_buffer[item], (100,100), "RGBA")
                 itemrect = Rect(square[0]*100,square[1]*100,100,100)
                 self.board_area.blit(item_image, itemrect)
+                
+        # Push-In Squares at edges
+        if self.is_hover:
+            push_in_tile_rect = self.is_hover
+            push_in_tile_image = tile_image = pygame.image.fromstring(
+                self.image_buffer[self.current_tile.tile_type], (100,100), "RGBA")
+            self.game_area.blit(push_in_tile_image, push_in_tile_rect)
+            if self.current_tile.item:
+                item = self.current_tile.item
+                push_in_tile_item_image = pygame.image.fromstring(
+                    self.image_buffer[item], (100,100), "RGBA")
+                self.game_area.blit(push_in_tile_item_image, push_in_tile_rect)
         
         # Menu
         #~ myfont = pygame.font.SysFont("monospace", 15)
@@ -155,21 +183,30 @@ class NewGame:
         #~ self.screen.blit(label, (100, 100))
         
         # Current Card
-        basecard_image = pygame.image.fromstring(self.image_buffer['basecard'], (100,100), "RGBA")
+        basecard_image = pygame.image.fromstring(
+            self.image_buffer['basecard'], (100,100), "RGBA")
         basecard_rect = Rect(50,25,100,100)
         self.menu_area.blit(basecard_image, basecard_rect)
         player_item = self.current_player.cards[0]
-        player_item_image = pygame.image.fromstring(self.image_buffer[item], (100,100), "RGBA")
+        player_item_image = pygame.image.fromstring(
+            self.image_buffer[item], (100,100), "RGBA")
         self.menu_area.blit(player_item_image, basecard_rect)
         
         # Update display
         pygame.display.flip()
         
-    def test_mouse_click_collides(self):
-        """Test if mouse clicks on a tile
+    def mouse_over_push_in(self, mouse_location):
+        """Test if mouse hovering over a push in location
         Return tilerect or False
         """
-        pass
+        #~ mouse_location = (187,877)
+        #~ _rect = (600, 800)
+        
+        mouse_x, mouse_y = mouse_location
+        for _rect in self.game_push_in_rects:
+            if _rect.collidepoint(mouse_x-200, mouse_y):
+                return (True, _rect)
+        return (False,False)
         
     def print_board(self):
         """Print text representation of the board"""
