@@ -165,15 +165,13 @@ class NewGame:
                 item_image = pygame.image.fromstring(
                     self.image_buffer[item], (100,100), "RGBA")
                 surface.blit(item_image, tile_rect)
-        
+            
         # Background
         self.screen.fill(self.background_color)
         
         # Board
         for square in self.board:
-            
             #TODO Perf improve?: only blit rects where obj hash has changed
-            
             # Tiles
             tile = self.board[square]
             rect = Rect(square[0]*100,square[1]*100,100,100)
@@ -206,18 +204,9 @@ class NewGame:
         
         # Current Tile
         tile = self.current_tile
-            
-        tile_image = pygame.image.fromstring(
-            self.image_buffer[tile.tile_type], (100,100), "RGBA")
-        tile_rotation = tile.tile_image_rotation()
-        tilerect = Rect(50,150,100,100)
-        final_tile = pygame.transform.rotate(tile_image, tile_rotation)
-        self.menu_area.blit(final_tile, tilerect)
-        if tile.item:
-            item = tile.item
-            item_image = pygame.image.fromstring(
-                self.image_buffer[item], (100,100), "RGBA")
-            self.menu_area.blit(item_image, tilerect)
+        rect =  Rect(50,150,100,100)
+        surf = self.menu_area
+        blit_tile(tile, rect, surf)
         
         # Update display
         pygame.display.flip()
