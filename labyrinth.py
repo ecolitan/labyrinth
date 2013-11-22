@@ -49,6 +49,7 @@ class NewGame:
         # Game state
         self.current_tile = ''              #start tile obj
         self.last_pushed_in = (0,0)         #update every move
+        self.last_pushed_out = (0,0)
         self.num_players = 3                #2,3,4 players
         
         # Initialise Game
@@ -124,6 +125,10 @@ class NewGame:
                     if event.button == 1:
                         if self.mouse_over_push_in(event.pos)[0]:
                             self.current_tile.rotate()
+                    elif event.button == 3:
+                        if self.mouse_over_push_in(event.pos)[0]:
+                            if self.mouse_over_push_in(event.pos)[2] != self.last_pushed_out:
+                                self.push_in(self.mouse_over_push_in(event.pos)[2], self.current_tile)
                 elif event.type == MOUSEMOTION:
                     is_hover = self.mouse_over_push_in(event.pos)
                     if is_hover[0]:
@@ -219,7 +224,8 @@ class NewGame:
         mouse_x, mouse_y = mouse_location
         for _rect in self.game_push_in_rects:
             if _rect.collidepoint(mouse_x-200, mouse_y):
-                return (True, _rect)
+                _rectpos = (_rect.left,_rect.top)
+                return (True, _rect, self.game_push_in_map[_rectpos])
         return (False,False)
         
     def print_board(self):
@@ -265,8 +271,9 @@ class NewGame:
             self.board[cur_square] = pre_tile
         self.board[row_vals[0]] = tile
         
-        #Update last pushed in
+        #Update last pushed in and out
         self.last_pushed_in = push_in_square
+        self.last_pushed_out = row_lists[push_in_square][-1]
         
     def setup_tiles(self):
         """Initialise all tile objects
