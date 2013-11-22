@@ -68,6 +68,15 @@ class BoardTile:
     def __str__(self):
         return str(self.item)
         
+    def __hash__(self):
+        return hash((self.id, self.is_occupied, tuple(self.exits), self.action, self.item))
+        
+    def __eq__(self, other):
+        return self.__hash__() == other.__hash__()
+        
+    def __ne__(self,other):
+        return self.__hash__() != other.__hash__()
+        
     def rotate(self):
         """Rotate the exits 90deg clockwise"""
         r = self.exits.pop()
@@ -105,4 +114,4 @@ class BoardTile:
                             tuple([False,True,True,True]): -180,
                             tuple([True,False,True,True]): -270 }
         return orientations[tuple(self.exits)]
-        
+
