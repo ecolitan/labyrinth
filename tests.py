@@ -73,14 +73,30 @@ class TestGraph(unittest.TestCase):
         self.board = pickle.load(_f)
         _f.close()
         
+        self.test_graph1 = Graph(self.board, (0,0))
+        self.test_graph2 = Graph(self.board, (0,0))
+        self.test_graph3 = Graph(self.board, (0,0))
+        self.test_graph4 = Graph(self.board, (0,0))
+        self.test_graph5 = Graph(self.board, (0,0))
         
+    def test_path_connects(self):
+        self.assertTrue(self.test_graph1.path_connects((0,0),(1,0),1))
+        self.assertTrue(self.test_graph1.path_connects((1,0),(0,0),3))
+        self.assertFalse(self.test_graph1.path_connects((0,0),(1,0),0))
+        self.assertFalse(self.test_graph1.path_connects((0,0),(1,0),2))
+        self.assertFalse(self.test_graph1.path_connects((3,4),(1,0),1))
+        self.assertTrue(self.test_graph1.path_connects((4,4),(4,5),2))
         
-        
+    def test_square_in_graph_node(self):
+        pass
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestTile)
+unittest.TextTestRunner(verbosity=2).run(suite)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestGraph)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 
