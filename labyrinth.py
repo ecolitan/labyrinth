@@ -27,7 +27,7 @@ class NewGame:
                        (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
                        (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
                        (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,}
-        
+        self.board_hash = {}
         # List of items in game
         self.items = ['genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
                       'candles', 'gem', 'lizzard', 'spider', 'purse', 'chest',
@@ -136,7 +136,7 @@ class NewGame:
                     #~ self.screen = pygame.display.set_mode(
                         #~ event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
                     
-                self.display_everything()
+            self.display_everything()
         
     def display_everything(self):
         """Draw everything to the screen"""
