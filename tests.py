@@ -87,8 +87,11 @@ class TestGraph(unittest.TestCase):
         self.assertFalse(self.test_graph1.path_connects((3,4),(1,0),1))
         self.assertTrue(self.test_graph1.path_connects((4,4),(4,5),2))
         
-    def test_square_in_graph_node(self):
-        pass
+    def test_find_adjacent_square(self):
+        self.assertEqual(None, self.test_graph1.find_adjacent_square((0,0),0))
+        self.assertEqual((1,0), self.test_graph1.find_adjacent_square((0,0),1))
+        self.assertEqual((0,1), self.test_graph1.find_adjacent_square((0,0),2))
+        self.assertEqual(None, self.test_graph1.find_adjacent_square((0,0),3))
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)

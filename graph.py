@@ -33,6 +33,7 @@ class Graph:
         self.queue.append(self.square)
 
         while len(self.queue) != 0:
+            #~ print len(self.queue), self.queue
             current_square = self.queue.pop()
             if self.square_in_graph_index(current_square):
                 continue
@@ -53,7 +54,7 @@ class Graph:
         Return coords of None if over egde.
         """
         # direction 0,1,2,3 -> [Up,Right,Down,Left]
-        transform = ( (-1,0),(0,1),(1,0),(0,-1) )
+        transform = ( (0,-1),(1,0),(0,1),(-1,0) )       #(Up,Right,Down,Left)
         square_x, square_y = square
         trans_x, trans_y = transform[direction]
         new_square = (square_x+trans_x, square_y+trans_y)
