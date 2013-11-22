@@ -148,6 +148,24 @@ class NewGame:
         """Draw everything to the screen"""
         #TODO subfunctions for display_tile, display_card
         
+        def blit_tile(tile_obj, tile_rect, surface):
+            """Blit a single tile with image
+            tile_obj is a BoardTile instance
+            tile_rect is the Rect obj
+            surface is the surface to blit to
+            """
+            tile_image = pygame.image.fromstring(
+                self.image_buffer[tile_obj.tile_type], (100,100), "RGBA")
+            tile_rotation = tile_obj.tile_image_rotation()
+            final_tile = pygame.transform.rotate(tile_image, tile_rotation)
+            surface.blit(final_tile, tile_rect)
+            
+            if tile_obj.item:
+                item = tile_obj.item
+                item_image = pygame.image.fromstring(
+                    self.image_buffer[item], (100,100), "RGBA")
+                surface.blit(item_image, tile_rect)
+        
         # Background
         self.screen.fill(self.background_color)
         
@@ -157,15 +175,8 @@ class NewGame:
             # Tiles
             tile = self.board[square]
             
-            #TODO Perf improve: only blit rects where hash has changed 
-            #~ # Check tile against hash
-            #~ if square in self.board_hash:
-                #~ if tile == self.board_hash[square]:
-                    #~ continue
-            #~ else:
-                #~ self.board_hash[square] = tile.__hash__()
+            #TODO Perf improve?: only blit rects where obj hash has changed 
             
-            #~ print square
             tile_image = pygame.image.fromstring(
                 self.image_buffer[tile.tile_type], (100,100), "RGBA")
             tile_rotation = tile.tile_image_rotation()
