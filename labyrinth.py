@@ -172,27 +172,14 @@ class NewGame:
         # Board
         for square in self.board:
             
+            #TODO Perf improve?: only blit rects where obj hash has changed
+            
             # Tiles
             tile = self.board[square]
+            rect = Rect(square[0]*100,square[1]*100,100,100)
             
-            #TODO Perf improve?: only blit rects where obj hash has changed 
-            
-            tile_image = pygame.image.fromstring(
-                self.image_buffer[tile.tile_type], (100,100), "RGBA")
-            tile_rotation = tile.tile_image_rotation()
-            tilerect = Rect(square[0]*100,square[1]*100,100,100)
-            final_tile = pygame.transform.rotate(tile_image, tile_rotation)
-            self.board_area.blit(final_tile, tilerect)
-
-            # Items
-            if self.board[square].item:
-                item = self.board[square].item
-                
-                item_image = pygame.image.fromstring(
-                    self.image_buffer[item], (100,100), "RGBA")
-                itemrect = Rect(square[0]*100,square[1]*100,100,100)
-                self.board_area.blit(item_image, itemrect)
-                
+            blit_tile(tile, rect, self.board_area)
+             
         # Push-In Squares at edges
         if self.is_hover:
             push_in_tile_rect = self.is_hover
