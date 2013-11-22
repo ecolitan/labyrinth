@@ -146,6 +146,7 @@ class NewGame:
         
     def display_everything(self):
         """Draw everything to the screen"""
+        #TODO subfunctions for display_tile, display_card
         
         # Background
         self.screen.fill(self.background_color)
@@ -196,10 +197,12 @@ class NewGame:
                     self.image_buffer[item], (100,100), "RGBA")
                 self.game_area.blit(push_in_tile_item_image, push_in_tile_rect)
         
-        # Menu
-        #~ myfont = pygame.font.SysFont("monospace", 15)
-        #~ label = myfont.render("Some text!", 1, (0,0,0))
-        #~ self.screen.blit(label, (100, 100))
+        # Labels
+        myfont = pygame.font.SysFont("monospace", 15, bold=True)
+        card_label = myfont.render("Current Card", 1, (0,0,0))
+        tile_label = myfont.render("Current Tile", 1, (0,0,0))
+        self.menu_area.blit(card_label, (50, 130))
+        self.menu_area.blit(tile_label, (50, 255))
         
         # Current Card
         basecard_image = pygame.image.fromstring(
@@ -210,6 +213,21 @@ class NewGame:
         player_item_image = pygame.image.fromstring(
             self.image_buffer[player_item], (100,100), "RGBA")
         self.menu_area.blit(player_item_image, basecard_rect)
+        
+        # Current Tile
+        tile = self.current_tile
+            
+        tile_image = pygame.image.fromstring(
+            self.image_buffer[tile.tile_type], (100,100), "RGBA")
+        tile_rotation = tile.tile_image_rotation()
+        tilerect = Rect(50,150,100,100)
+        final_tile = pygame.transform.rotate(tile_image, tile_rotation)
+        self.menu_area.blit(final_tile, tilerect)
+        if tile.item:
+            item = tile.item
+            item_image = pygame.image.fromstring(
+                self.image_buffer[item], (100,100), "RGBA")
+            self.menu_area.blit(item_image, tilerect)
         
         # Update display
         pygame.display.flip()
