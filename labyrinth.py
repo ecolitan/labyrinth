@@ -3,6 +3,7 @@
 import sys
 import pygame
 import os
+import pickle
 from pygame.locals import *
 from random import shuffle
 from player import Player
@@ -351,6 +352,10 @@ class NewGame:
         # Set player home squares
         for square in ( (0,0), (0,6), (6,6), (6,0) ):
             self.board[square].item = colors_list.pop()
+            
+        #~ _f = open("tests/testboard1.pickle", "w+")
+        #~ pickle.dump(self.board, _f, pickle.HIGHEST_PROTOCOL)
+        #~ _f.close()
         
     def path_exists(self, square1, square2):
         """Determine if a path exists between two squares
