@@ -146,7 +146,6 @@ class NewGame:
         
     def display_everything(self):
         """Draw everything to the screen"""
-        #TODO subfunctions for display_tile, display_card
         
         def blit_tile(tile_obj, tile_rect, surface):
             """Blit a single tile with image
@@ -166,6 +165,19 @@ class NewGame:
                     self.image_buffer[item], (100,100), "RGBA")
                 surface.blit(item_image, tile_rect)
             
+        def blit_card(card, card_rect, surface):
+            """Blit a single card
+            str card
+            Rect card_rect
+            Surface surface
+            """
+            basecard_image = pygame.image.fromstring(
+                self.image_buffer['basecard'], (100,100), "RGBA")
+            surface.blit(basecard_image, card_rect)
+            card_image = pygame.image.fromstring(
+                self.image_buffer[card], (100,100), "RGBA")
+            surface.blit(card_image, card_rect)
+        
         # Background
         self.screen.fill(self.background_color)
         
@@ -193,14 +205,10 @@ class NewGame:
         self.menu_area.blit(tile_label, (50, 255))
         
         # Current Card
-        basecard_image = pygame.image.fromstring(
-            self.image_buffer['basecard'], (100,100), "RGBA")
-        basecard_rect = Rect(50,25,100,100)
-        self.menu_area.blit(basecard_image, basecard_rect)
-        player_item = self.current_player.cards[0]
-        player_item_image = pygame.image.fromstring(
-            self.image_buffer[player_item], (100,100), "RGBA")
-        self.menu_area.blit(player_item_image, basecard_rect)
+        card = self.current_player.cards[0]
+        rect = Rect(50,25,100,100)
+        surf = self.menu_area
+        blit_card(card, rect, surf)
         
         # Current Tile
         tile = self.current_tile
