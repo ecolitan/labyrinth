@@ -122,8 +122,8 @@ class NewGame:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        mouse_x, mouse_y = event.pos
-                        print mouse_x, mouse_y
+                        if self.mouse_over_push_in(event.pos)[0]:
+                            self.current_tile.rotate()
                 elif event.type == MOUSEMOTION:
                     is_hover = self.mouse_over_push_in(event.pos)
                     if is_hover[0]:
@@ -181,7 +181,10 @@ class NewGame:
             push_in_tile_rect = self.is_hover
             push_in_tile_image = tile_image = pygame.image.fromstring(
                 self.image_buffer[self.current_tile.tile_type], (100,100), "RGBA")
-            self.game_area.blit(push_in_tile_image, push_in_tile_rect)
+            push_in_tile_rotation = self.current_tile.tile_image_rotation()
+            push_in_final_tile = pygame.transform.rotate(
+                push_in_tile_image, push_in_tile_rotation)
+            self.game_area.blit(push_in_final_tile, push_in_tile_rect)
             if self.current_tile.item:
                 item = self.current_tile.item
                 push_in_tile_item_image = pygame.image.fromstring(
