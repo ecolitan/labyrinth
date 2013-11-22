@@ -30,7 +30,7 @@ class Graph:
         # exits = [Up,Right,Down,Left]
 
         # Init loop
-        self.queue.push(self.square)
+        self.queue.append(self.square)
 
         while len(self.queue) != 0:
             current_square = self.queue.pop()
@@ -39,13 +39,13 @@ class Graph:
             self.graph[current_square] = []
             for index in (0,1,2,3):
                 if self.board[current_square].exits[index]:
-                    possible_square = self.find_adjacent_square(self.board[current_square], index)
+                    possible_square = self.find_adjacent_square(current_square, index)
                     if possible_square is None:
                         continue
                     if self.path_connects(current_square, possible_square, index):
                         new_square = possible_square
                         if new_square not in self.queue:
-                            self.queue.push(new_square)
+                            self.queue.append(new_square)
                         self.graph[current_square].append(new_square)
 
     def find_adjacent_square(self, square, direction):
@@ -53,9 +53,10 @@ class Graph:
         Return coords of None if over egde.
         """
         # direction 0,1,2,3 -> [Up,Right,Down,Left]
-        
         transform = ( (-1,0),(0,1),(1,0),(0,-1) )
-        new_square = tuple([i + j for i, j in zip(square, transform[direction])])
+        square_x, square_y = square
+        trans_x, trans_y = transform[direction]
+        new_square = (square_x+trans_x, square_y+trans_y)
         
         if (-1 or 7) in new_square:
             return None
