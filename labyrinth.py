@@ -177,23 +177,15 @@ class NewGame:
             # Tiles
             tile = self.board[square]
             rect = Rect(square[0]*100,square[1]*100,100,100)
-            
-            blit_tile(tile, rect, self.board_area)
+            surf = self.board_area
+            blit_tile(tile, rect, surf)
              
         # Push-In Squares at edges
         if self.is_hover:
-            push_in_tile_rect = self.is_hover
-            push_in_tile_image = tile_image = pygame.image.fromstring(
-                self.image_buffer[self.current_tile.tile_type], (100,100), "RGBA")
-            push_in_tile_rotation = self.current_tile.tile_image_rotation()
-            push_in_final_tile = pygame.transform.rotate(
-                push_in_tile_image, push_in_tile_rotation)
-            self.game_area.blit(push_in_final_tile, push_in_tile_rect)
-            if self.current_tile.item:
-                item = self.current_tile.item
-                push_in_tile_item_image = pygame.image.fromstring(
-                    self.image_buffer[item], (100,100), "RGBA")
-                self.game_area.blit(push_in_tile_item_image, push_in_tile_rect)
+            tile = self.current_tile
+            rect = self.is_hover
+            surf = self.game_area
+            blit_tile(tile, rect, surf)
         
         # Labels
         myfont = pygame.font.SysFont("monospace", 15, bold=True)
