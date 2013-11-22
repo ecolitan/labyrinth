@@ -1,6 +1,7 @@
 # coding: utf8
 
 import unittest
+import pickle
 from player import Player
 from tile import BoardTile
 from graph import Graph
@@ -64,50 +65,13 @@ class TestTile(unittest.TestCase):
         corner_tile = BoardTile([True,True,False,False])
         self.assertEqual(0, corner_tile.tile_image_rotation())
         corner_tile.rotate()
-        self.assertEqual(90, corner_tile.tile_image_rotation())
+        self.assertEqual(-90, corner_tile.tile_image_rotation())
 
 class TestGraph(unittest.TestCase):
     def setUp(self):
-        self.board = {}
-        movable_squares = ((1, 3), (3, 0), (3, 2), (2, 1), (5, 6), (1, 6),
-                           (5, 1), (2, 5), (0, 3), (1, 2), (5, 5), (6, 3),
-                           (1, 5), (5, 0), (3, 5), (4, 1), (1, 1), (5, 4),
-                           (3, 6), (4, 5), (1, 4), (2, 3), (1, 0), (6, 5),
-                           (3, 3), (0, 1), (5, 3), (3, 4), (6, 1), (3, 1),
-                           (4, 3), (0, 5), (5, 2))
-        self.board[(0,0)] = BoardTile([False,True,True,False])
-        self.board[(0,6)] = BoardTile([False,False,True,True])
-        self.board[(6,6)] = BoardTile([True,False,False,True])
-        self.board[(6,0)] = BoardTile([True,True,False,False])
-        self.board[(0,2)] = BoardTile([False,True,True,True])
-        self.board[(0,4)] = BoardTile([False,True,True,True])
-        self.board[(2,6)] = BoardTile([True,False,True,True])
-        self.board[(4,6)] = BoardTile([True,False,True,True])
-        self.board[(6,4)] = BoardTile([True,True,False,True])
-        self.board[(6,2)] = BoardTile([True,True,False,True])
-        self.board[(2,0)] = BoardTile([True,True,True,False])
-        self.board[(4,0)] = BoardTile([True,True,True,False])
-        self.board[(2,2)] = BoardTile([False,True,True,True])
-        self.board[(4,2)] = BoardTile([False,True,True,True])
-        self.board[(2,4)] = BoardTile([False,True,True,True])
-        self.board[(4,4)] = BoardTile([False,True,True,True])
-        tiles = []
-        for i in xrange(0,6):
-            tiles.append(BoardTile([False,True,True,True]))
-        for i in xrange(0,6):
-            tiles.append(BoardTile([False,True,False,True]))
-        for i in xrange(0,6):
-            tiles.append(BoardTile([False,True,False,True]))
-        for i in xrange(0,6):
-            tiles.append(BoardTile([True,True,False,False]))
-        for i in xrange(0,4):
-            tiles.append(BoardTile([True,True,False,False]))
-        for i in xrange(0,6):
-            tiles.append(BoardTile([True,True,False,False]))
-        
-        for square in self.movable_squares:
-            self.board[square] = tiles.pop()
-
+        _f = open("tests/testboard1.pickle")
+        self.board = pickle.load(_f)
+        _f.close()
         
         
         
