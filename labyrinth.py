@@ -28,6 +28,7 @@ class NewGame:
                        (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
                        (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,}
         self.board_hash = {}
+        
         # List of items in game
         self.items = ['genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
                       'candles', 'gem', 'lizzard', 'spider', 'purse', 'chest',
@@ -146,8 +147,18 @@ class NewGame:
         
         # Board
         for square in self.board:
+            
             # Tiles
             tile = self.board[square]
+            
+            #TODO Perf improve: only blit rects where hash has changed 
+            #~ # Check tile against hash
+            #~ if square in self.board_hash:
+                #~ if tile == self.board_hash[square]:
+                    #~ continue
+            #~ else:
+                #~ self.board_hash[square] = tile.__hash__()
+            
             #~ print square
             tile_image = pygame.image.fromstring(
                 self.image_buffer[tile.tile_type], (100,100), "RGBA")
@@ -189,7 +200,7 @@ class NewGame:
         self.menu_area.blit(basecard_image, basecard_rect)
         player_item = self.current_player.cards[0]
         player_item_image = pygame.image.fromstring(
-            self.image_buffer[item], (100,100), "RGBA")
+            self.image_buffer[player_item], (100,100), "RGBA")
         self.menu_area.blit(player_item_image, basecard_rect)
         
         # Update display
