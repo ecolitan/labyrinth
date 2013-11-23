@@ -73,26 +73,40 @@ class TestGraph(unittest.TestCase):
         self.board = pickle.load(_f)
         _f.close()
         
-        self.test_graph1 = Graph(self.board, (0,0))
-        self.test_graph2 = Graph(self.board, (0,0))
-        self.test_graph3 = Graph(self.board, (0,0))
-        self.test_graph4 = Graph(self.board, (0,0))
-        self.test_graph5 = Graph(self.board, (0,0))
+        self.test_graph_obj1 = Graph(self.board, (0,0))
+        self.test_graph1 = {(0,0): [(1,0)],
+                            (1,0): [(2,0), (1,1)] }
+        self.test_graph2 = {(0,3): [(1,3), (0,4)],
+                            (1,3): [(1,4)],
+                            (0,4): [(0,5)],
+                            (0,5): [(1,5)] }
         
     def test_path_connects(self):
-        self.assertTrue(self.test_graph1.path_connects((0,0),(1,0),1))
-        self.assertTrue(self.test_graph1.path_connects((1,0),(0,0),3))
-        self.assertFalse(self.test_graph1.path_connects((0,0),(1,0),0))
-        self.assertFalse(self.test_graph1.path_connects((0,0),(1,0),2))
-        self.assertFalse(self.test_graph1.path_connects((3,4),(1,0),1))
-        self.assertTrue(self.test_graph1.path_connects((4,4),(4,5),2))
+        self.assertTrue(self.test_graph_obj1.path_connects((0,0),(1,0),1))
+        self.assertTrue(self.test_graph_obj1.path_connects((1,0),(0,0),3))
+        self.assertFalse(self.test_graph_obj1.path_connects((0,0),(1,0),0))
+        self.assertFalse(self.test_graph_obj1.path_connects((0,0),(1,0),2))
+        self.assertFalse(self.test_graph_obj1.path_connects((3,4),(1,0),1))
+        self.assertTrue(self.test_graph_obj1.path_connects((4,4),(4,5),2))
         
     def test_find_adjacent_square(self):
-        self.assertEqual(None, self.test_graph1.find_adjacent_square((0,0),0))
-        self.assertEqual((1,0), self.test_graph1.find_adjacent_square((0,0),1))
-        self.assertEqual((0,1), self.test_graph1.find_adjacent_square((0,0),2))
-        self.assertEqual(None, self.test_graph1.find_adjacent_square((0,0),3))
-
+        self.assertEqual(None, self.test_graph_obj1.find_adjacent_square((0,0),0))
+        self.assertEqual((1,0), self.test_graph_obj1.find_adjacent_square((0,0),1))
+        self.assertEqual((0,1), self.test_graph_obj1.find_adjacent_square((0,0),2))
+        self.assertEqual(None, self.test_graph_obj1.find_adjacent_square((0,0),3))
+        
+    def test_square_in_graph_index(self):
+        self.assertTrue(self.test_graph_obj1.square_in_graph_index((0,0), graph=self.test_graph1))
+        self.assertFalse(self.test_graph_obj1.square_in_graph_index((0,6), graph=self.test_graph1))
+        self.assertTrue(self.test_graph_obj1.square_in_graph_index((0,4), graph=self.test_graph2))
+        self.assertFalse(self.test_graph_obj1.square_in_graph_index((0,1), graph=self.test_graph2))
+        
+    def test_square_in_graph_node(self):
+        self.assertFalse(self.test_graph_obj1.square_in_graph_node((6,6), graph=self.test_graph1))
+        self.assertFalse(self.test_graph_obj1.square_in_graph_node((0,0), graph=self.test_graph1))
+        self.assertTrue(self.test_graph_obj1.square_in_graph_node((1,0), graph=self.test_graph1))
+        self.assertTrue(self.test_graph_obj1.square_in_graph_node((1,1), graph=self.test_graph1))
+    
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
