@@ -31,10 +31,13 @@ class Graph:
 
         # Init loop
         self.queue.append(self.square)
-
-        while len(self.queue) != 0:
-            #~ print len(self.queue), self.queue
+        print self.graph
+        #~ while len(self.queue) != 0:
+        for _ in xrange(0,50):
+            raw_input()
+            print len(self.queue), self.queue, self.graph
             current_square = self.queue.pop()
+            
             if self.square_in_graph_index(current_square):
                 continue
             self.graph[current_square] = []
@@ -75,23 +78,31 @@ class Graph:
         else:
             return False
 
-    def square_in_graph_node(self, square):
+    def square_in_graph_node(self, square, graph=None):
         """Test if square is a node in the graph
         return True or False
         """
-        for key in self.graph.keys():
-            if square in self.graph[key]:
+        if graph:
+            _graph = graph
+        else:
+            _graph = self.graph
+            
+        for key in _graph.keys():
+            if square in _graph[key]:
                 return True
-            else:
-                return False
+        return False
                 
-    def square_in_graph_index(self, square):
+    def square_in_graph_index(self, square, graph=None):
         """Test if square is an index in the graph
         Return True or False
         """
-        for key in self.graph.keys():
-            if key == square:
-                return True
-            else:
-                return False
+        if graph:
+            _graph = graph
+        else:
+            _graph = self.graph
+            
+        if square in _graph:
+            return True
+        else:
+            return False
 
