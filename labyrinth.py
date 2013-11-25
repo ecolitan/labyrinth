@@ -51,11 +51,14 @@ class NewGame:
         self.current_tile = ''              #start tile obj
         self.last_pushed_in = (0,0)         #update every move
         self.last_pushed_out = (0,0)
-        self.num_players = 3                #2,3,4 players
+        self.num_players = 4                #2,3,4 players
+        self.active_players = []
+        self.current_player = ''            #player obj
         
         # Initialise Game
-        self.init_players()
         self.setup_tiles()
+        #players must be setup after tiles
+        self.init_players()
         self.load_images()
         self.setup_pygame()
         self.game_loop()
@@ -165,7 +168,7 @@ class NewGame:
                 item_image = pygame.image.fromstring(
                     self.image_buffer[item], (100,100), "RGBA")
                 surface.blit(item_image, tile_rect)
-            
+                
         def blit_card(card, card_rect, surface):
             """Blit a single card
             str card
@@ -178,6 +181,16 @@ class NewGame:
             card_image = pygame.image.fromstring(
                 self.image_buffer[card], (100,100), "RGBA")
             surface.blit(card_image, card_rect)
+            
+        def blit_player(player_obj, surface):
+            """Blit a player figure to the board"""
+            player_color = player_obj.color
+            player_figure = player_obj.player_images[player_color]
+            player_image = pygame.image.fromstring(
+                self.image_buffer[player_figure], (100,100), "RGBA")
+            player_square = player_obj.location
+            player_rect = Rect(player_square[0]*100,player_square[1]*100,100,100)
+            surface.blit(player_image, player_rect)
         
         # Background
         self.screen.fill(self.background_color)
@@ -190,6 +203,10 @@ class NewGame:
             rect = Rect(square[0]*100,square[1]*100,100,100)
             surf = self.board_area
             blit_tile(tile, rect, surf)
+                
+        # Player Figures
+        for player in self.active_players:
+            blit_player(player, self.board_area)
              
         # Push-In Squares at edges
         if self.is_hover:
@@ -369,25 +386,17 @@ class NewGame:
     def init_players(self):
         """Initialise the players"""
         
-        self.active_players = []
+        
         ## Setup players
-        self.player1 = Player()
-        self.player2 = Player()
-        self.player3 = Player()
-        self.player4 = Player()
+        self.player1 = Player('blue', (0,0))
+        self.player2 = Player('red', (6,0))
+        self.player3 = Player('green', (0,6))
+        self.player4 = Player('yellow', (6,6))
+        
         # Activate players
         for i in xrange(0,self.num_players):
             [self.player1, self.player2, self.player3, self.player4][i].isactive = True
-        # Player home squares
-        self.player1.home = (0,0)
-        self.player2.home = (0,6)
-        self.player3.home = (6,0)
-        self.player4.home = (6,6)
-        # Player initial locations
-        self.player1.location = self.player1.home
-        self.player2.location = self.player2.home
-        self.player3.location = self.player3.home
-        self.player4.location = self.player4.home
+        
         # Setup Cards
         self.cards_per_player = len(self.items)
         shuffle(self.items)
@@ -396,6 +405,11 @@ class NewGame:
             if player.isactive is True:
                 self.active_players.append(player)
                 player.cards = hands.pop()
+                
+        # Set squares to occupied
+        for player in self.active_players:
+            self.board[player.location].is_occupied = True
+        
         # Current Player to go
         self.current_player = self.active_players[0]
         
@@ -434,7 +448,11 @@ class NewGame:
                             'home-green': os.path.join(self.image_dir, 'home-green-100px.png'),
                             'home-blue': os.path.join(self.image_dir, 'home-blue-100px.png'),
                             'home-yellow': os.path.join(self.image_dir, 'home-yellow-100px.png'),
-                            'basecard': os.path.join(self.image_dir, 'basecard-100px.png') }
+                            'basecard': os.path.join(self.image_dir, 'basecard-100px.png'),
+                            'player-yellow': os.path.join(self.image_dir, 'player-yellow-100px.png'),
+                            'player-blue': os.path.join(self.image_dir, 'player-blue-100px.png'),
+                            'player-green': os.path.join(self.image_dir, 'player-green-100px.png'),
+                            'player-red': os.path.join(self.image_dir, 'player-red-100px.png') }
         image_surface = {}
         for image in image_path.keys():
             image_surface[image] = pygame.image.load(image_path[image])
