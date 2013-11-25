@@ -55,6 +55,7 @@ class NewGame:
         self.num_players = 4                #2,3,4 players
         self.active_players = []
         self.current_player = ''            #player obj
+        self.game_phase = 'push'            # -> (rotate) + "push" -> "move" ->
         
         # Initialise Game
         self.setup_tiles()
@@ -134,12 +135,20 @@ class NewGame:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        if self.mouse_over_push_in(event.pos)[0]:
-                            self.current_tile.rotate()
+                        if self.game_phase == "push":
+                            if self.mouse_over_push_in(event.pos)[0]:
+                                self.current_tile.rotate()
                     elif event.button == 3:
-                        if self.mouse_over_push_in(event.pos)[0]:
-                            if self.mouse_over_push_in(event.pos)[2] != self.last_pushed_out:
-                                self.push_in(self.mouse_over_push_in(event.pos)[2], self.current_tile)
+                        if self.game_phase == "push":
+                            if self.mouse_over_push_in(event.pos)[0]:
+                                if self.mouse_over_push_in(event.pos)[2] != self.last_pushed_out:
+                                    self.push_in(self.mouse_over_push_in(event.pos)[2], self.current_tile)
+                                    self.game_phase = "move"
+                        elif self.game_phase == "move":
+                            pass
+                            # if user clicks a square that can be moved to, move there
+                            
+                            
                 elif event.type == MOUSEMOTION:
                     is_hover = self.mouse_over_push_in(event.pos)
                     if is_hover[0]:
@@ -226,8 +235,11 @@ class NewGame:
         myfont = pygame.font.SysFont("monospace", 15, bold=True)
         card_label = myfont.render("Current Card", 1, (0,0,0))
         tile_label = myfont.render("Current Tile", 1, (0,0,0))
+        player = myfont.render(
+            "Current Player: {}".format(self.current_player.color), 1, (0,0,0))
         self.menu_area.blit(card_label, (50, 130))
         self.menu_area.blit(tile_label, (50, 255))
+        self.menu_area.blit(player, (5, 280))
         
         # Current Card
         card = self.current_player.cards[0]
@@ -248,15 +260,24 @@ class NewGame:
         """Test if mouse hovering over a push in location
         Return tilerect or False
         """
-        #~ mouse_location = (187,877)
-        #~ _rect = (600, 800)
-        
         mouse_x, mouse_y = mouse_location
         for _rect in self.game_push_in_rects:
             if _rect.collidepoint(mouse_x-200, mouse_y):
                 _rectpos = (_rect.left,_rect.top)
                 return (True, _rect, self.game_push_in_map[_rectpos])
         return (False,False)
+        
+    def mouse_over_board(self, mouse_location):
+        """Test if mouse over the board
+        Return square or False
+        """
+        mouse_x, mouse_y = mouse_location
+        if ((300 <= mouse_x < 1000) and (100 <= mouse_y < 800)):
+            return False
+        else:
+            x_pos = (mouse_x - 300) / 100.0
+            y_pos = (mouse_y - 100) / 100.0
+            return (x_pos,y_pos)
         
     def print_board(self):
         """Print text representation of the board"""
