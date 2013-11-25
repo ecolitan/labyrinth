@@ -1,4 +1,11 @@
 # coding: utf8
+import sys
+#~ import unittest
+#~ import pickle
+#~ from player import Player
+#~ from tile import BoardTile
+#~ from graph import Graph
+#~ from labyrinth import NewGame
 
 class Graph:
     def __init__(self, board, square):
@@ -30,28 +37,56 @@ class Graph:
         # exits = [Up,Right,Down,Left]
 
         # Init loop
+        
+        # Add initial square to the queue
         self.queue.append(self.square)
-        print self.graph
-        #~ while len(self.queue) != 0:
-        for _ in xrange(0,50):
-            raw_input()
-            print len(self.queue), self.queue, self.graph
+        
+        while len(self.queue) != 0:
+            # Take current square for loop from the queue
             current_square = self.queue.pop()
             
+            # If current square already an key, continue
             if self.square_in_graph_index(current_square):
                 continue
+                
+            # Add current square to graph
             self.graph[current_square] = []
+
+            # For each direction
             for index in (0,1,2,3):
+                
+                # If there is an exit in that direction
                 if self.board[current_square].exits[index]:
+                    
+                    # The possible square is the adjacent square in that direction
                     possible_square = self.find_adjacent_square(current_square, index)
+                    
+                    # If the edge of the board, continue the for current loop
                     if possible_square is None:
                         continue
+                        
+                    # If possible square already a key, continue
+                    if self.square_in_graph_index(possible_square):
+                        continue
+                        
+                    # If a path connects the current to the possible square
                     if self.path_connects(current_square, possible_square, index):
+                        # Set new square value 
                         new_square = possible_square
+                        
+                        # If new square not already in queue
                         if new_square not in self.queue:
+                            # Add it to queue
                             self.queue.append(new_square)
+                            
+                        # Append new square to list for current square
                         self.graph[current_square].append(new_square)
-
+                        
+        # Remove empty nodes from graph
+        for key in self.graph.keys():
+            if self.graph[key] == []:
+                del self.graph[key]
+                    
     def find_adjacent_square(self, square, direction):
         """Find coords of the adjacent square in given direction
         Return coords of None if over egde.
@@ -105,4 +140,19 @@ class Graph:
             return True
         else:
             return False
-
+        
+    def travel_between(self, square1, square2, graph=None):
+        """Test if path between two squares in a graph
+        Return True or False
+        """
+        pass
+        if graph:
+            _graph = graph
+        else:
+            _graph = self.graph
+            
+        if ((self.square_in_graph_index(square1, _graph) or self.square_in_graph_node(square1, _graph)) and
+            (self.square_in_graph_index(square2, _graph) or self.square_in_graph_node(square2, _graph))):
+            return True
+        else:
+            return False
