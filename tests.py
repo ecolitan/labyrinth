@@ -74,6 +74,7 @@ class TestGraph(unittest.TestCase):
         _f.close()
         
         self.test_graph_obj1 = Graph(self.board, (0,0))
+        self.test_graph_obj2 = Graph(self.board, (0,3))
         self.test_graph1 = {(0,0): [(1,0)],
                             (1,0): [(2,0), (1,1)] }
         self.test_graph2 = {(0,3): [(1,3), (0,4)],
@@ -106,7 +107,21 @@ class TestGraph(unittest.TestCase):
         self.assertFalse(self.test_graph_obj1.square_in_graph_node((0,0), graph=self.test_graph1))
         self.assertTrue(self.test_graph_obj1.square_in_graph_node((1,0), graph=self.test_graph1))
         self.assertTrue(self.test_graph_obj1.square_in_graph_node((1,1), graph=self.test_graph1))
-    
+        
+    def test_build_graph(self):
+        self.assertEqual(self.test_graph1, self.test_graph_obj1.graph)
+        #~ self.assertEqual(self.test_graph2, self.test_graph_obj2.graph)
+        # Not sure how to write this test, need a way to test if two graphs which
+        # have different orders are actually equivalent 
+        
+    def test_travel_between(self):
+        self.assertTrue(self.test_graph_obj1.travel_between((0,0), (1,1) ,graph=self.test_graph1))
+        self.assertFalse(self.test_graph_obj1.travel_between((0,0), (4,4) ,graph=self.test_graph1))
+        self.assertTrue(self.test_graph_obj2.travel_between((1,3), (1,5) ,graph=self.test_graph2))
+        self.assertFalse(self.test_graph_obj2.travel_between((0,0), (4,4) ,graph=self.test_graph2))
+        self.assertFalse(self.test_graph_obj2.travel_between((0,0), (4,4) ,graph=self.test_graph1))
+        
+        
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
