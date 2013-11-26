@@ -406,15 +406,6 @@ class NewGame:
         #~ pickle.dump(self.board, _f, pickle.HIGHEST_PROTOCOL)
         #~ _f.close()
         
-    def path_exists(self, square1, square2):
-        """Determine if a path exists between two squares
-        return True or False
-        """
-        pass
-        # http://en.wikipedia.org/wiki/Tree_traversal
-        # http://stackoverflow.com/questions/3097556/programming-theory-solve-a-maze
-        # http://en.wikipedia.org/wiki/Breadth-first_search
-        
     def init_players(self):
         """Initialise the players"""
         
