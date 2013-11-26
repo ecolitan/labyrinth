@@ -17,9 +17,10 @@ class NewGame:
     def __init__(self, cli=False):
         """Setup the game"""
         
-        # Misc Variables
+        # Misc Variables - all attributes registered in __init__()
         self.image_dir = 'images'
         self.cli = cli
+        self.image_buffer = {}
         
         # Board Grid (x right, y down)       
         self.board = { (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
@@ -437,7 +438,9 @@ class NewGame:
         self.current_player = self.active_players[0]
         
     def load_images(self):
-        """Load tile images into string buffers"""
+        """Load tile images into string buffers
+        store buffers in the dict self.image_buffer
+        """
         
         image_path = {
                             'genie': os.path.join(self.image_dir, 'item-genie-100px.png'),
@@ -479,7 +482,6 @@ class NewGame:
         image_surface = {}
         for image in image_path.keys():
             image_surface[image] = pygame.image.load(image_path[image])
-        self.image_buffer = {}
         for surface in image_surface.keys():
             self.image_buffer[surface] = pygame.image.tostring(image_surface[surface], "RGBA")
         
