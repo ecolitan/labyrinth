@@ -442,46 +442,48 @@ class NewGame:
         store buffers in the dict self.image_buffer
         """
         
-        image_path = {
-                            'genie': os.path.join(self.image_dir, 'item-genie-100px.png'),
-                            'map': os.path.join(self.image_dir, 'item-map-100px.png'),
-                            'book': os.path.join(self.image_dir, 'item-book-100px.png'),
-                            'bat': os.path.join(self.image_dir, 'item-bat-100px.png'),
-                            'skull': os.path.join(self.image_dir, 'item-skull-100px.png'),
-                            'ring': os.path.join(self.image_dir, 'item-ring-100px.png'),
-                            'sword': os.path.join(self.image_dir, 'item-sword-100px.png'),
-                            'candles': os.path.join(self.image_dir, 'item-candles-100px.png'),
-                            'gem': os.path.join(self.image_dir, 'item-gem-100px.png'),
-                            'lizzard': os.path.join(self.image_dir, 'item-lizzard-100px.png'),
-                            'spider': os.path.join(self.image_dir, 'item-spider-100px.png'),
-                            'purse': os.path.join(self.image_dir, 'item-purse-100px.png'),
-                            'chest': os.path.join(self.image_dir, 'item-chest-100px.png'),
-                            'beetle': os.path.join(self.image_dir, 'item-beetle-100px.png'),
-                            'owl': os.path.join(self.image_dir, 'item-owl-100px.png'),
-                            'keys': os.path.join(self.image_dir, 'item-keys-100px.png'),
-                            'dwarf': os.path.join(self.image_dir, 'item-dwarf-100px.png'),
-                            'helmet': os.path.join(self.image_dir, 'item-helmet-100px.png'),
-                            'fairy': os.path.join(self.image_dir, 'item-fairy-100px.png'),
-                            'moth': os.path.join(self.image_dir, 'item-moth-100px.png'),
-                            'dragon': os.path.join(self.image_dir, 'item-dragon-100px.png'),
-                            'mouse': os.path.join(self.image_dir, 'item-mouse-100px.png'),
-                            'ghost': os.path.join(self.image_dir, 'item-ghost-100px.png'),
-                            'crown': os.path.join(self.image_dir, 'item-crown-100px.png'),
-                            'straight': os.path.join(self.image_dir, 'tile-tftf-100px.png'),
-                            'corner': os.path.join(self.image_dir, 'tile-ttff-100px.png'),
-                            'tee': os.path.join(self.image_dir, 'tile-ttft-100px.png'),
-                            'home-red': os.path.join(self.image_dir, 'home-red-100px.png'),
-                            'home-green': os.path.join(self.image_dir, 'home-green-100px.png'),
-                            'home-blue': os.path.join(self.image_dir, 'home-blue-100px.png'),
-                            'home-yellow': os.path.join(self.image_dir, 'home-yellow-100px.png'),
-                            'basecard': os.path.join(self.image_dir, 'basecard-100px.png'),
-                            'player-yellow': os.path.join(self.image_dir, 'player-yellow-100px.png'),
-                            'player-blue': os.path.join(self.image_dir, 'player-blue-100px.png'),
-                            'player-green': os.path.join(self.image_dir, 'player-green-100px.png'),
-                            'player-red': os.path.join(self.image_dir, 'player-red-100px.png') }
+        #TODO path.join seperatly
+        image_filename = {
+                            'genie': 'item-genie-100px.png',
+                            'map': 'item-map-100px.png',
+                            'book': 'item-book-100px.png',
+                            'bat': 'item-bat-100px.png',
+                            'skull': 'item-skull-100px.png',
+                            'ring': 'item-ring-100px.png',
+                            'sword': 'item-sword-100px.png',
+                            'candles': 'item-candles-100px.png',
+                            'gem': 'item-gem-100px.png',
+                            'lizzard': 'item-lizzard-100px.png',
+                            'spider': 'item-spider-100px.png',
+                            'purse': 'item-purse-100px.png',
+                            'chest': 'item-chest-100px.png',
+                            'beetle': 'item-beetle-100px.png',
+                            'owl': 'item-owl-100px.png',
+                            'keys': 'item-keys-100px.png',
+                            'dwarf': 'item-dwarf-100px.png',
+                            'helmet': 'item-helmet-100px.png',
+                            'fairy': 'item-fairy-100px.png',
+                            'moth': 'item-moth-100px.png',
+                            'dragon': 'item-dragon-100px.png',
+                            'mouse': 'item-mouse-100px.png',
+                            'ghost': 'item-ghost-100px.png',
+                            'crown': 'item-crown-100px.png',
+                            'straight': 'tile-tftf-100px.png',
+                            'corner': 'tile-ttff-100px.png',
+                            'tee': 'tile-ttft-100px.png',
+                            'home-red': 'home-red-100px.png',
+                            'home-green': 'home-green-100px.png',
+                            'home-blue': 'home-blue-100px.png',
+                            'home-yellow': 'home-yellow-100px.png',
+                            'basecard': 'basecard-100px.png',
+                            'player-yellow': 'player-yellow-100px.png',
+                            'player-blue': 'player-blue-100px.png',
+                            'player-green': 'player-green-100px.png',
+                            'player-red': 'player-red-100px.png' }
         image_surface = {}
-        for image in image_path.keys():
-            image_surface[image] = pygame.image.load(image_path[image])
+        for image in image_filename.keys():
+            image_surface[image] = pygame.image.load(
+                os.path.join(self.image_dir, image_filename[image]))
         for surface in image_surface.keys():
             self.image_buffer[surface] = pygame.image.tostring(image_surface[surface], "RGBA")
         
