@@ -14,11 +14,12 @@ if not pygame.font: print 'Warning, fonts disabled'
 if not pygame.mixer: print 'Warning, sound disabled'
 
 class NewGame:
-    def __init__(self):
+    def __init__(self, cli=False):
         """Setup the game"""
         
         # Misc Variables
         self.image_dir = 'images'
+        self.cli = cli
         
         # Board Grid (x right, y down)       
         self.board = { (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
@@ -62,8 +63,10 @@ class NewGame:
         #players must be setup after tiles
         self.init_players()
         self.load_images()
-        self.setup_pygame()
-        self.game_loop()
+        
+        if self.cli == False:
+            self.setup_pygame()
+            self.game_loop()
         
     def setup_pygame(self):
         """Setup Variables, Surfaces ,etc. for pygame"""
@@ -135,6 +138,7 @@ class NewGame:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
+                        print event.pos
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
                                 self.current_tile.rotate()
@@ -272,11 +276,11 @@ class NewGame:
         Return square or False
         """
         mouse_x, mouse_y = mouse_location
-        if ((300 <= mouse_x < 1000) and (100 <= mouse_y < 800)):
+        if not ((300 <= mouse_x < 1000) and (100 <= mouse_y < 800)):
             return False
         else:
-            x_pos = (mouse_x - 300) / 100.0
-            y_pos = (mouse_y - 100) / 100.0
+            x_pos = (mouse_x - 300) / 100
+            y_pos = (mouse_y - 100) / 100
             return (x_pos,y_pos)
         
     def print_board(self):

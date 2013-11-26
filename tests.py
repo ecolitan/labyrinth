@@ -12,10 +12,10 @@ class TestPlayer(unittest.TestCase):
         pass
         
     def test_attributes(self):
-        self.assertIs(type(Player().id), int)
-        self.assertIs(type(Player().isactive), bool)
-        self.assertIs(type(Player().name), str)
-        self.assertIs(type(Player().color), str)
+        self.assertIs(type(Player('green', (0,0)).id), int)
+        self.assertIs(type(Player('green', (0,0)).isactive), bool)
+        self.assertIs(type(Player('green', (0,0)).name), str)
+        self.assertIs(type(Player('green', (0,0)).color), str)
         
 class TestTile(unittest.TestCase):
     def setUp(self):
@@ -121,7 +121,43 @@ class TestGraph(unittest.TestCase):
         self.assertFalse(self.test_graph_obj2.travel_between((0,0), (4,4) ,graph=self.test_graph2))
         self.assertFalse(self.test_graph_obj2.travel_between((0,0), (4,4) ,graph=self.test_graph1))
         
+class TestNewGame(unittest.TestCase):
+    def setUp(self):
+        _f = open("tests/testboard1.pickle")
+        self.board = pickle.load(_f)
+        _f.close()
         
+        self.test_game_obj1 = Graph(self.board, (0,0))
+        self.test_graph_obj2 = Graph(self.board, (0,3))
+        self.test_graph1 = {(0,0): [(1,0)],
+                            (1,0): [(2,0), (1,1)] }
+        self.test_graph2 = {(0,3): [(1,3), (0,4)],
+                            (1,3): [(1,4)],
+                            (0,4): [(0,5)],
+                            (0,5): [(1,5)] }
+                            
+    def test_mouse_over_board(self):
+        self.assertEqual((0,0), NewGame(cli=True).mouse_over_board((359, 171)))
+        self.assertEqual((4,4), NewGame(cli=True).mouse_over_board((719, 545)))
+        self.assertEqual((0,6), NewGame(cli=True).mouse_over_board((374, 729)))
+        self.assertEqual((6,1), NewGame(cli=True).mouse_over_board((932, 268)))
+        self.assertEqual((6,4), NewGame(cli=True).mouse_over_board((936, 540)))
+        
+        self.assertFalse(NewGame(cli=True).mouse_over_board((244, 57)))
+        self.assertFalse(NewGame(cli=True).mouse_over_board((127, 642)))
+        self.assertFalse(NewGame(cli=True).mouse_over_board((404, 864)))
+        self.assertFalse(NewGame(cli=True).mouse_over_board((1024, 569)))
+        self.assertFalse(NewGame(cli=True).mouse_over_board((1013, 23)))
+        
+
+
+
+
+
+        
+        
+
+    
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
@@ -129,6 +165,9 @@ suite = unittest.TestLoader().loadTestsFromTestCase(TestTile)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 suite = unittest.TestLoader().loadTestsFromTestCase(TestGraph)
+unittest.TextTestRunner(verbosity=2).run(suite)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestNewGame)
 unittest.TextTestRunner(verbosity=2).run(suite)
 
 
