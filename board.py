@@ -45,3 +45,13 @@ class Board(dict):
         self.last_pushed_in = push_in_square
         self.last_pushed_out = row_lists[push_in_square][-1]
         
+    def print_board(self):
+        """Print text representation of the board"""
+        keys = sorted(self.keys())
+        i, j = (0,7)
+        while j < 50:
+            for key in keys[i:j]:
+                print self[key],
+            print
+            i += 7; j += 7
+        print

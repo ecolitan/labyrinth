@@ -298,19 +298,6 @@ class NewGame:
         return (Graph(self.board, self.current_player.location).
             travel_between(self.current_player.location, square))
         
-    def print_board(self):
-        """Print text representation of the board"""
-        keys = sorted(self.board.keys())
-        i, j = (0,7)
-        while j < 50:
-            for key in keys[i:j]:
-                print self.board[key],
-            print
-            i += 7; j += 7
-        print
-        
-    
-        
     def setup_tiles(self):
         """Initialise all tile objects
         Allocate tile objects to board positions
