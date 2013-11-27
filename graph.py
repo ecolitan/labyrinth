@@ -97,7 +97,7 @@ class Graph:
         trans_x, trans_y = transform[direction]
         new_square = (square_x+trans_x, square_y+trans_y)
         
-        if (-1 or 7) in new_square:
+        if ((-1 in new_square) or (7 in new_square)):
             return None
         else:
             return new_square
@@ -107,8 +107,6 @@ class Graph:
         direction is the direction from square1 to square2
         Return True or False
         """
-        print "square1", square1
-        print "square2", square2
         reverse_direction_map = {0:2,1:3,2:0,3:1}
         if self.board[square1].exits[direction] and self.board[square2].exits[reverse_direction_map[direction]]:
             return True
