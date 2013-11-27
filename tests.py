@@ -6,6 +6,7 @@ from player import Player
 from tile import BoardTile
 from graph import Graph
 from labyrinth import NewGame
+from board import Board
 
 class TestPlayer(unittest.TestCase):
     def setUp(self):
@@ -142,14 +143,14 @@ class TestNewGame(unittest.TestCase):
         self.assertEqual((0,6), NewGame(cli=True).mouse_over_board((374, 729)))
         self.assertEqual((6,1), NewGame(cli=True).mouse_over_board((932, 268)))
         self.assertEqual((6,4), NewGame(cli=True).mouse_over_board((936, 540)))
-        
         self.assertFalse(NewGame(cli=True).mouse_over_board((244, 57)))
         self.assertFalse(NewGame(cli=True).mouse_over_board((127, 642)))
         self.assertFalse(NewGame(cli=True).mouse_over_board((404, 864)))
         self.assertFalse(NewGame(cli=True).mouse_over_board((1024, 569)))
         self.assertFalse(NewGame(cli=True).mouse_over_board((1013, 23)))
         
-
+    def test_load_images(self):
+        pass
 
 
 
