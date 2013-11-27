@@ -9,6 +9,7 @@ from random import shuffle
 from player import Player
 from tile import BoardTile
 from graph import Graph
+from board import Board
 
 if not pygame.font: print 'Warning, fonts disabled'
 if not pygame.mixer: print 'Warning, sound disabled'
@@ -23,13 +24,13 @@ class NewGame:
         self.image_buffer = {}
         
         # Board Grid (x right, y down)       
-        self.board = { (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
+        self.board = Board({ (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
                        (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
                        (0,2): None, (1,2): None, (2,2): None, (3,2): None, (4,2): None, (5,2): None, (6,2): None,
                        (0,3): None, (1,3): None, (2,3): None, (3,3): None, (4,3): None, (5,3): None, (6,3): None,
                        (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
                        (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
-                       (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,}
+                       (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,})
         self.board_hash = {}
         
         # List of items in game
@@ -132,7 +133,6 @@ class NewGame:
             #http://www.gamedev.net/topic/518494-pygame-eating-up-my-cpu/
             
             for event in pygame.event.get():
-                #~ print event.type, event
                 if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN, MOUSEMOTION]:
                     continue 
                 if event.type == pygame.QUIT:
@@ -143,16 +143,24 @@ class NewGame:
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
                                 self.current_tile.rotate()
+                        elif self.game_phase == "move":
+                            square = self.mouse_over_board(event.pos)
+                            if square:
+                                #TODO fun for this
+                                if self.path_exists(square):
+                                    self.update_player_location(
+                                        self.current_player, square)
+                                    #if lands on the item the player needs, update player obj
+                                    self.next_active_player()
+                                    self.game_phase = "push"
+                                    
                     elif event.button == 3:
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
                                 if self.mouse_over_push_in(event.pos)[2] != self.last_pushed_out:
                                     self.push_in(self.mouse_over_push_in(event.pos)[2], self.current_tile)
                                     self.game_phase = "move"
-                        elif self.game_phase == "move":
-                            pass
-                            # if user clicks a square that can be moved to, move there
-                            
+                        
                             
                 elif event.type == MOUSEMOTION:
                     is_hover = self.mouse_over_push_in(event.pos)
@@ -283,6 +291,16 @@ class NewGame:
             x_pos = (mouse_x - 300) / 100
             y_pos = (mouse_y - 100) / 100
             return (x_pos,y_pos)
+            
+    def update_player_location(self, player_obj, square):
+        """Update all the variables needed to move player to another square"""
+        self.board[player_obj.location].is_occupied = False
+        player_obj.location = square
+        self.board[square].is_occupied = True
+        
+    def path_exists(self, square):
+        return (Graph(self.board, self.current_player.location).
+            travel_between(self.current_player.location, square))
         
     def print_board(self):
         """Print text representation of the board"""
@@ -437,12 +455,16 @@ class NewGame:
         # Current Player to go
         self.current_player = self.active_players[0]
         
+    def next_active_player(self):
+        """Change self.current_player to the next active player"""
+        p = self.active_players.pop()
+        self.active_players.insert(0, p)
+        self.current_player = self.active_players[0]
+        
     def load_images(self):
         """Load tile images into string buffers
         store buffers in the dict self.image_buffer
         """
-        
-        #TODO path.join seperatly
         image_filename = {
                             'genie': 'item-genie-100px.png',
                             'map': 'item-map-100px.png',
@@ -489,4 +511,4 @@ class NewGame:
         
 if __name__ == "__main__":
     MainWindow = NewGame()
-    #~ MainWindow.MainLoop()        
+
