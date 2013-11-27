@@ -287,6 +287,7 @@ class NewGame:
         self.board[square].is_occupied = True
         
     def path_exists(self, square):
+        #~ print "path_exists", square
         return (Graph(self.board, self.current_player.location).
             travel_between(self.current_player.location, square))
         
@@ -368,7 +369,6 @@ class NewGame:
         
     def init_players(self):
         """Initialise the players"""
-        
         
         ## Setup players
         self.player1 = Player('blue', (0,0))
