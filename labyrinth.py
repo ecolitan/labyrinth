@@ -25,12 +25,12 @@ class NewGame:
         
         # Board Grid (x right, y down)       
         self.board = Board({ (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
-                       (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
-                       (0,2): None, (1,2): None, (2,2): None, (3,2): None, (4,2): None, (5,2): None, (6,2): None,
-                       (0,3): None, (1,3): None, (2,3): None, (3,3): None, (4,3): None, (5,3): None, (6,3): None,
-                       (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
-                       (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
-                       (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,})
+                             (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
+                             (0,2): None, (1,2): None, (2,2): None, (3,2): None, (4,2): None, (5,2): None, (6,2): None,
+                             (0,3): None, (1,3): None, (2,3): None, (3,3): None, (4,3): None, (5,3): None, (6,3): None,
+                             (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
+                             (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
+                             (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,})
         self.board_hash = {}
         
         # List of items in game
@@ -42,8 +42,7 @@ class NewGame:
                         'see_two_cards', 'swap_card', 'through_wall']
         self.player_home_colors = ['home-red', 'home-yellow', 'home-green',
                                    'home-blue']
-        self.allowed_push_in_squares = ( (0,1),(0,3),(0,5),(1,0),(3,0),(5,0),
-                                         (6,1),(6,3),(6,5),(1,6),(3,6),(5,6) )
+        
         self.fixed_squares = ( (0,0), (2,0), (4,0), (6,0),
                                (0,2), (2,2), (4,2), (6,2),
                                (0,4), (2,4), (4,4), (6,4),
@@ -52,9 +51,6 @@ class NewGame:
         self.movable_squares = tuple(set(self.board.keys()).difference(self.fixed_squares))
         
         # Game state
-        self.current_tile = ''              #start tile obj
-        self.last_pushed_in = (0,0)         #update every move
-        self.last_pushed_out = (0,0)
         self.num_players = 4                #2,3,4 players
         self.active_players = []
         self.current_player = ''            #player obj
@@ -142,7 +138,7 @@ class NewGame:
                         print event.pos
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
-                                self.current_tile.rotate()
+                                self.board.current_tile.rotate()
                         elif self.game_phase == "move":
                             square = self.mouse_over_board(event.pos)
                             if square:
@@ -157,8 +153,8 @@ class NewGame:
                     elif event.button == 3:
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
-                                if self.mouse_over_push_in(event.pos)[2] != self.last_pushed_out:
-                                    self.push_in(self.mouse_over_push_in(event.pos)[2], self.current_tile)
+                                if self.mouse_over_push_in(event.pos)[2] != self.board.last_pushed_out:
+                                    self.board.push_in(self.mouse_over_push_in(event.pos)[2])
                                     self.game_phase = "move"
                         
                             
@@ -239,7 +235,7 @@ class NewGame:
              
         # Push-In Squares at edges
         if self.is_hover:
-            tile = self.current_tile
+            tile = self.board.current_tile
             rect = self.is_hover
             surf = self.game_area
             blit_tile(tile, rect, surf)
@@ -261,7 +257,7 @@ class NewGame:
         blit_card(card, rect, surf)
         
         # Current Tile
-        tile = self.current_tile
+        tile = self.board.current_tile
         rect =  Rect(50,150,100,100)
         surf = self.menu_area
         blit_tile(tile, rect, surf)
@@ -313,41 +309,7 @@ class NewGame:
             i += 7; j += 7
         print
         
-    def push_in(self, push_in_square, tile):
-        """Push tile into push_square
-        Update row values
-        Update current_tile
-        """
-        if push_in_square not in self.allowed_push_in_squares:
-            raise Exception
-        row_lists = { (0, 1): [(0, 1), (1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1)],
-                      (0, 3): [(0, 3), (1, 3), (2, 3), (3, 3), (4, 3), (5, 3), (6, 3)],
-                      (0, 5): [(0, 5), (1, 5), (2, 5), (3, 5), (4, 5), (5, 5), (6, 5)],
-                      (1, 0): [(1, 0), (1, 1), (1, 2), (1, 3), (1, 4), (1, 5), (1, 6)],
-                      (3, 0): [(3, 0), (3, 1), (3, 2), (3, 3), (3, 4), (3, 5), (3, 6)],
-                      (5, 0): [(5, 0), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (5, 6)],
-                      (6, 1): [(6, 1), (5, 1), (4, 1), (3, 1), (2, 1), (1, 1), (0, 1)],
-                      (6, 3): [(6, 3), (5, 3), (4, 3), (3, 3), (2, 3), (1, 3), (0, 3)],
-                      (6, 5): [(6, 5), (5, 5), (4, 5), (3, 5), (2, 5), (1, 5), (0, 5)],
-                      (1, 6): [(1, 6), (1, 5), (1, 4), (1, 3), (1, 2), (1, 1), (1, 0)],
-                      (3, 6): [(3, 6), (3, 5), (3, 4), (3, 3), (3, 2), (3, 1), (3, 0)],
-                      (5, 6): [(5, 6), (5, 5), (5, 4), (5, 3), (5, 2), (5, 1), (5, 0)] }
-        row_vals = row_lists[push_in_square]
-        
-        #update current_tile
-        self.current_tile = self.board[row_vals[-1]]
-        
-        #push new tile in and push tiles along
-        for i in reversed(xrange(1,7)):
-            cur_square = row_vals[i]
-            pre_square = row_vals[i-1]
-            pre_tile = self.board[pre_square]
-            self.board[cur_square] = pre_tile
-        self.board[row_vals[0]] = tile
-        
-        #Update last pushed in and out
-        self.last_pushed_in = push_in_square
-        self.last_pushed_out = row_lists[push_in_square][-1]
+    
         
     def setup_tiles(self):
         """Initialise all tile objects
@@ -415,7 +377,7 @@ class NewGame:
             self.board[square] = tiles.pop()
         
         #Remaining tile is the start tile
-        self.current_tile = tiles.pop()
+        self.board.current_tile = tiles.pop()
         
         # Set player home squares
         for square in ( (0,0), (0,6), (6,6), (6,0) ):
