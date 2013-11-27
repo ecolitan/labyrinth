@@ -31,7 +31,6 @@ class NewGame:
                              (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
                              (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
                              (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,})
-        self.board_hash = {}
         
         # List of items in game
         self.items = ['genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
@@ -42,13 +41,6 @@ class NewGame:
                         'see_two_cards', 'swap_card', 'through_wall']
         self.player_home_colors = ['home-red', 'home-yellow', 'home-green',
                                    'home-blue']
-        
-        self.fixed_squares = ( (0,0), (2,0), (4,0), (6,0),
-                               (0,2), (2,2), (4,2), (6,2),
-                               (0,4), (2,4), (4,4), (6,4),
-                               (0,6), (2,6), (4,6), (6,6) )
-        self.corners = ( (0,0), (0,6), (6,0), (6,6) )
-        self.movable_squares = tuple(set(self.board.keys()).difference(self.fixed_squares))
         
         # Game state
         self.num_players = 4                #2,3,4 players
@@ -360,7 +352,7 @@ class NewGame:
         shuffle(tiles)
 
         #Assign tiles to remaining squares
-        for square in self.movable_squares:
+        for square in self.board.movable_squares:
             self.board[square] = tiles.pop()
         
         #Remaining tile is the start tile
