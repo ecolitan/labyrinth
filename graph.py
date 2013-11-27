@@ -107,6 +107,8 @@ class Graph:
         direction is the direction from square1 to square2
         Return True or False
         """
+        print "square1", square1
+        print "square2", square2
         reverse_direction_map = {0:2,1:3,2:0,3:1}
         if self.board[square1].exits[direction] and self.board[square2].exits[reverse_direction_map[direction]]:
             return True
