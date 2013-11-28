@@ -200,14 +200,18 @@ class NewGame:
                 self.image_buffer[card], (100,100), "RGBA")
             surface.blit(card_image, card_rect)
             
-        def blit_player(player_obj, surface):
+        def blit_player(player_obj, surface, coords=None):
             """Blit a player figure to the board"""
+            if coords == None:
+                coords = (player_obj.location[0]*100, player_obj.location[1]*100)
+            dims = (100,100)
+            
             player_color = player_obj.color
             player_figure = player_obj.player_images[player_color]
             player_image = pygame.image.fromstring(
                 self.image_buffer[player_figure], (100,100), "RGBA")
             player_square = player_obj.location
-            player_rect = Rect(player_square[0]*100,player_square[1]*100,100,100)
+            player_rect = Rect((coords),(dims))
             surface.blit(player_image, player_rect)
         
         # Background
