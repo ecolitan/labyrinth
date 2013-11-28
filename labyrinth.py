@@ -138,7 +138,8 @@ class NewGame:
                                 if self.path_exists(square):
                                     self.update_player_location(
                                         self.current_player, square)
-                                    #if lands on the item the player needs, update player obj
+                                    if self.update_player_item(self.current_player, square) == "winner":
+                                        self.game_phase == "won"
                                     self.next_active_player()
                                     self.game_phase = "push"
                                     
@@ -243,7 +244,7 @@ class NewGame:
         self.menu_area.blit(player, (5, 280))
         
         # Current Card
-        card = self.current_player.cards[0]
+        card = self.current_player.current_card
         rect = Rect(50,25,100,100)
         surf = self.menu_area
         blit_card(card, rect, surf)
@@ -285,6 +286,13 @@ class NewGame:
         self.board[player_obj.location].is_occupied = False
         player_obj.location = square
         self.board[square].is_occupied = True
+        
+    def update_player_item(self, player_obj, square):
+        """Update the players item attributes
+        Return winner if no more items for player
+        """
+        if self.board[square].item == player_obj.current_card:
+            return player_obj.current_card_found()
         
     def path_exists(self, square):
         #~ print "path_exists", square
@@ -388,6 +396,7 @@ class NewGame:
             if player.isactive is True:
                 self.active_players.append(player)
                 player.cards = hands.pop()
+                player.draw_card()
                 
         # Set squares to occupied
         for player in self.active_players:
