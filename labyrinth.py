@@ -67,7 +67,7 @@ class NewGame:
         # Initialise PyGame Variables
         pygame.init()
         self.mainscreen_size = (1100, 900)
-        self.background_color = (127,255,212)
+        self.background_color = (160,217,92)
         self.is_hover = False
         
         self.screen = pygame.display.set_mode(
