@@ -23,6 +23,7 @@ class NewGame:
         self.cli = cli
         self.image_buffer = {}
         
+        
         # Board Grid (x right, y down)       
         self.board = Board({
             (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
@@ -71,6 +72,8 @@ class NewGame:
         pygame.init()
         self.mainscreen_size = (1100, 900)
         self.background_color = (160,217,92)
+        self.color_push_in_rect = (153,255,179)
+        self.color_no_push_in = (204,0,0)
         self.is_hover = False
         
         self.screen = pygame.display.set_mode(
@@ -108,6 +111,7 @@ class NewGame:
             (400, 0):   (3, 0),
             (600, 800): (5, 6),
             (600, 0):   (5, 0) }
+        self.inv_push_in_map = {v:k for k, v in self.game_push_in_map.items()}
         self.game_push_in_rects = (
             Rect(400, 800, 100, 100),
             Rect(800, 600, 100, 100),
@@ -287,10 +291,20 @@ class NewGame:
             blit_player(player, self.board_area)
              
         # Push-In Squares at edges
+        if self.board.last_pushed_out:
+            last_pushed_out = self.board.last_pushed_out
+            last_pushed_out_rect = Rect(
+                (self.inv_push_in_map[last_pushed_out]), (100,100))
+            blit_push_in_rect(
+                self.game_area, self.color_no_push_in, last_pushed_out_rect)
+        else:
+            last_pushed_out_rect = None
+            
         for rect in self.game_push_in_rects:
-            if rect != self.is_hover:
-                blit_push_in_rect(self.game_area, (153,255,179), rect)
-        if self.is_hover:
+            if ((rect != self.is_hover) and (rect != last_pushed_out_rect)):
+                blit_push_in_rect(self.game_area, self.color_push_in_rect, rect)
+                
+        if (self.is_hover and self.is_hover != last_pushed_out_rect):
             tile = self.board.current_tile
             rect = self.is_hover
             surf = self.game_area
