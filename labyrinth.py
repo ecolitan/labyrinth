@@ -263,6 +263,12 @@ class NewGame:
                 # remove the text we just blitted
                 text = text[i:]
             return text
+            
+        def blit_push_in_rect(surface, color, rect):
+            """push in rects are green
+            except the one where you may not push!
+            """
+            pygame.draw.rect(surface, color, rect)
         
         # Background
         self.screen.fill(self.background_color)
@@ -281,6 +287,9 @@ class NewGame:
             blit_player(player, self.board_area)
              
         # Push-In Squares at edges
+        for rect in self.game_push_in_rects:
+            if rect != self.is_hover:
+                blit_push_in_rect(self.game_area, (153,255,179), rect)
         if self.is_hover:
             tile = self.board.current_tile
             rect = self.is_hover
