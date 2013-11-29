@@ -76,12 +76,14 @@ class TestGraph(unittest.TestCase):
         
         self.test_graph_obj1 = Graph(self.board, (0,0))
         self.test_graph_obj2 = Graph(self.board, (0,3))
+        self.test_graph_obj3 = Graph(self.board, (2,1))
         self.test_graph1 = {(0,0): [(1,0)],
                             (1,0): [(2,0), (1,1)] }
         self.test_graph2 = {(0,3): [(1,3), (0,4)],
                             (1,3): [(1,4)],
                             (0,4): [(0,5)],
                             (0,5): [(1,5)] }
+        self.test_graph3 = {}
         
     def test_path_connects(self):
         self.assertTrue(self.test_graph_obj1.path_connects((0,0),(1,0),1))
@@ -90,18 +92,21 @@ class TestGraph(unittest.TestCase):
         self.assertFalse(self.test_graph_obj1.path_connects((0,0),(1,0),2))
         self.assertFalse(self.test_graph_obj1.path_connects((3,4),(1,0),1))
         self.assertTrue(self.test_graph_obj1.path_connects((4,4),(4,5),2))
+        self.assertFalse(self.test_graph_obj3.path_connects((2,1),(2,2),2))
         
     def test_find_adjacent_square(self):
         self.assertEqual(None, self.test_graph_obj1.find_adjacent_square((0,0),0))
         self.assertEqual((1,0), self.test_graph_obj1.find_adjacent_square((0,0),1))
         self.assertEqual((0,1), self.test_graph_obj1.find_adjacent_square((0,0),2))
         self.assertEqual(None, self.test_graph_obj1.find_adjacent_square((0,0),3))
+        self.assertEqual((2,2), self.test_graph_obj3.find_adjacent_square((2,1),2))
         
     def test_square_in_graph_index(self):
         self.assertTrue(self.test_graph_obj1.square_in_graph_index((0,0), graph=self.test_graph1))
         self.assertFalse(self.test_graph_obj1.square_in_graph_index((0,6), graph=self.test_graph1))
         self.assertTrue(self.test_graph_obj1.square_in_graph_index((0,4), graph=self.test_graph2))
         self.assertFalse(self.test_graph_obj1.square_in_graph_index((0,1), graph=self.test_graph2))
+        self.assertFalse(self.test_graph_obj3.square_in_graph_index((2,2), graph=self.test_graph3))
         
     def test_square_in_graph_node(self):
         self.assertFalse(self.test_graph_obj1.square_in_graph_node((6,6), graph=self.test_graph1))
@@ -111,6 +116,8 @@ class TestGraph(unittest.TestCase):
         
     def test_build_graph(self):
         self.assertEqual(self.test_graph1, self.test_graph_obj1.graph)
+        self.assertEqual(self.test_graph3, self.test_graph_obj3.graph)
+        
         #~ self.assertEqual(self.test_graph2, self.test_graph_obj2.graph)
         # Not sure how to write this test, need a way to test if two graphs which
         # have different orders are actually equivalent 
