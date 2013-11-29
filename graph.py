@@ -140,6 +140,16 @@ class Graph:
             return True
         else:
             return False
+            
+    def square_in_graph(self, square, graph):
+        """Test if a square is in a graph at all
+        Return True or False
+        """
+        if ((self.square_in_graph_index(square, graph)) or
+            self.square_in_graph_node(square, graph)):
+            return True
+        else:
+            return False
         
     def travel_between(self, square1, square2, graph=None):
         """Test if path between two squares in a graph
@@ -151,8 +161,7 @@ class Graph:
         else:
             _graph = self.graph
             
-        if ((self.square_in_graph_index(square1, _graph) or self.square_in_graph_node(square1, _graph)) and
-            (self.square_in_graph_index(square2, _graph) or self.square_in_graph_node(square2, _graph))):
+        if (self.square_in_graph(square1, _graph) and self.square_in_graph(square2, _graph)):
             return True
         else:
             return False
