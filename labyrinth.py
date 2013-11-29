@@ -47,7 +47,10 @@ class NewGame:
         self.active_players = []
         self.current_player = ''            #player obj
         self.game_phase = 'push'            # -> (rotate) + "push" -> "move" ->
-        
+        self.text_message_box = {
+            'push': 'Hover the mouse over the push-in square. Rotate the tile with left-click. Right-Click to push tile in.',
+            'move': 'Click a square to move there.',
+            'won': 'You Won!!' }
         # Initialise Game
         self.setup_tiles()
         #players must be setup after tiles
@@ -213,6 +216,47 @@ class NewGame:
             player_square = player_obj.location
             player_rect = Rect((coords),(dims))
             surface.blit(player_image, player_rect)
+            
+        def blit_text(surface, text, color, rect, font, aa=False, bkg=None):
+            """Draw some text into an area of a surface
+            automatically wraps words
+            returns any text that didn't get blitted
+            """
+            rect = Rect(rect)
+            y = rect.top
+            lineSpacing = -2
+         
+            # get the height of the font
+            fontHeight = font.size("Tg")[1]
+         
+            while text:
+                i = 1
+         
+                # determine if the row of text will be outside our area
+                if y + fontHeight > rect.bottom:
+                    break
+         
+                # determine maximum width of line
+                while font.size(text[:i])[0] < rect.width and i < len(text):
+                    i += 1
+         
+                # if we've wrapped the text, then adjust the wrap to the last word      
+                if i < len(text): 
+                    i = text.rfind(" ", 0, i) + 1
+         
+                # render the line and blit it to the surface
+                if bkg:
+                    image = font.render(text[:i], 1, color, bkg)
+                    image.set_colorkey(bkg)
+                else:
+                    image = font.render(text[:i], aa, color)
+         
+                surface.blit(image, (rect.left, y))
+                y += fontHeight + lineSpacing
+         
+                # remove the text we just blitted
+                text = text[i:]
+            return text
         
         # Background
         self.screen.fill(self.background_color)
@@ -241,11 +285,11 @@ class NewGame:
         myfont = pygame.font.SysFont("monospace", 15, bold=True)
         card_label = myfont.render("Current Card", 1, (0,0,0))
         tile_label = myfont.render("Current Tile", 1, (0,0,0))
-        player = myfont.render(
+        player_label = myfont.render(
             "Current Player: {}".format(self.current_player.color), 1, (0,0,0))
         self.menu_area.blit(card_label, (50, 130))
         self.menu_area.blit(tile_label, (50, 255))
-        self.menu_area.blit(player, (5, 280))
+        self.menu_area.blit(player_label, (5, 380))
         
         # Current Card
         card = self.current_player.current_card
@@ -258,6 +302,13 @@ class NewGame:
         rect =  Rect(50,150,100,100)
         surf = self.menu_area
         blit_tile(tile, rect, surf)
+        
+        # Current Player
+        blit_player(self.current_player, self.menu_area, (50,275))
+        
+        # Text box
+        blit_text(self.menu_area, self.text_message_box[self.game_phase],
+            (0,0,0), (5,500,190,190), myfont)
         
         # Update display
         pygame.display.flip()
