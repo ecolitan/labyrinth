@@ -72,6 +72,7 @@ class NewGame:
         pygame.init()
         self.mainscreen_size = (1100, 900)
         self.background_color = (160,217,92)
+        self.menu_background_color = (71,163,255)
         self.color_push_in_rect = (153,255,179)
         self.color_no_push_in = (204,0,0)
         self.is_hover = False
@@ -276,6 +277,7 @@ class NewGame:
         
         # Background
         self.screen.fill(self.background_color)
+        self.menu_area.fill(self.menu_background_color)
         
         # Board
         for square in self.board:
@@ -338,6 +340,12 @@ class NewGame:
         # Text box
         blit_text(self.menu_area, self.text_message_box[self.game_phase],
             (0,0,0), (5,500,190,190), myfont)
+            
+        # Game Border
+        border_color = (0,0,0)
+        game_area_rect = (0,0,900,900)
+        border_width = 4
+        pygame.draw.rect(self.game_area, border_color, game_area_rect, border_width)
         
         # Update display
         pygame.display.flip()
