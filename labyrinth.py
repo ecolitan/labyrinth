@@ -24,23 +24,26 @@ class NewGame:
         self.image_buffer = {}
         
         # Board Grid (x right, y down)       
-        self.board = Board({ (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
-                             (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
-                             (0,2): None, (1,2): None, (2,2): None, (3,2): None, (4,2): None, (5,2): None, (6,2): None,
-                             (0,3): None, (1,3): None, (2,3): None, (3,3): None, (4,3): None, (5,3): None, (6,3): None,
-                             (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
-                             (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
-                             (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,})
+        self.board = Board({
+            (0,0): None, (1,0): None, (2,0): None, (3,0): None, (4,0): None, (5,0): None, (6,0): None,
+            (0,1): None, (1,1): None, (2,1): None, (3,1): None, (4,1): None, (5,1): None, (6,1): None,
+            (0,2): None, (1,2): None, (2,2): None, (3,2): None, (4,2): None, (5,2): None, (6,2): None,
+            (0,3): None, (1,3): None, (2,3): None, (3,3): None, (4,3): None, (5,3): None, (6,3): None,
+            (0,4): None, (1,4): None, (2,4): None, (3,4): None, (4,4): None, (5,4): None, (6,4): None,
+            (0,5): None, (1,5): None, (2,5): None, (3,5): None, (4,5): None, (5,5): None, (6,5): None,
+            (0,6): None, (1,6): None, (2,6): None, (3,6): None, (4,6): None, (5,6): None, (6,6): None,})
         
         # List of items in game
-        self.items = ['genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
-                      'candles', 'gem', 'lizzard', 'spider', 'purse', 'chest',
-                      'beetle', 'owl', 'keys', 'dwarf', 'helmet', 'fairy',
-                      'moth', 'dragon', 'mouse', 'ghost', 'crown']
-        self.actions = ['second_push', 'two_turns', 'swap_figures',
-                        'see_two_cards', 'swap_card', 'through_wall']
-        self.player_home_colors = ['home-red', 'home-yellow', 'home-green',
-                                   'home-blue']
+        self.items = [
+            'genie', 'map', 'book', 'bat', 'skull', 'ring', 'sword',
+            'candles', 'gem', 'lizzard', 'spider', 'purse', 'chest',
+            'beetle', 'owl', 'keys', 'dwarf', 'helmet', 'fairy',
+            'moth', 'dragon', 'mouse', 'ghost', 'crown']
+        self.actions = [
+            'second_push', 'two_turns', 'swap_figures',
+            'see_two_cards', 'swap_card', 'through_wall']
+        self.player_home_colors = [
+            'home-red', 'home-yellow', 'home-green', 'home-blue']
         
         # Game state
         self.num_players = 4                #2,3,4 players
@@ -92,30 +95,33 @@ class NewGame:
         for square in self.board.keys():
             self.tilerect[square] = Rect(square[0]*100,square[1]*100,100,100)
             
-        self.game_push_in_map = {(400, 800): (3, 6),
-                                 (800, 600): (6, 5),
-                                 (200, 0):   (1, 0),
-                                 (200, 800): (1, 6),
-                                 (800, 400): (6, 3),
-                                 (0, 600):   (0, 5),
-                                 (0, 200):   (0, 1),
-                                 (0, 400):   (0, 3),
-                                 (800, 200): (6, 1),
-                                 (400, 0):   (3, 0),
-                                 (600, 800): (5, 6),
-                                 (600, 0):   (5, 0) }
-        self.game_push_in_rects = (Rect(400, 800, 100, 100),
-                                   Rect(800, 600, 100, 100),
-                                   Rect(200, 0, 100, 100),
-                                   Rect(200, 800, 100, 100),
-                                   Rect(800, 400, 100, 100),
-                                   Rect(0, 600, 100, 100),
-                                   Rect(0, 200, 100, 100),
-                                   Rect(0, 400, 100, 100),
-                                   Rect(800, 200, 100, 100),
-                                   Rect(400, 0, 100, 100),
-                                   Rect(600, 800, 100, 100),
-                                   Rect(600, 0, 100, 100) )
+        self.game_push_in_map = {
+            (400, 800): (3, 6),
+            (800, 600): (6, 5),
+            (200, 0):   (1, 0),
+            (200, 800): (1, 6),
+            (800, 400): (6, 3),
+            (0, 600):   (0, 5),
+            (0, 200):   (0, 1),
+            (0, 400):   (0, 3),
+            (800, 200): (6, 1),
+            (400, 0):   (3, 0),
+            (600, 800): (5, 6),
+            (600, 0):   (5, 0) }
+        self.game_push_in_rects = (
+            Rect(400, 800, 100, 100),
+            Rect(800, 600, 100, 100),
+            Rect(200, 0, 100, 100),
+            Rect(200, 800, 100, 100),
+            Rect(800, 400, 100, 100),
+            Rect(0, 600, 100, 100),
+            Rect(0, 200, 100, 100),
+            Rect(0, 400, 100, 100),
+            Rect(800, 200, 100, 100),
+            Rect(400, 0, 100, 100),
+            Rect(600, 800, 100, 100),
+            Rect(600, 0, 100, 100) )
+            
     def game_loop(self):
         self.display_everything()
         while 1:
