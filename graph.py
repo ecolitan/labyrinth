@@ -14,6 +14,7 @@ class Graph:
         """
         self.board = board
         self.square = square
+        self.all_graphs = []
         self.graph = {}
         self.queue = []
         self.build_graph()
@@ -165,3 +166,7 @@ class Graph:
             return True
         else:
             return False
+            
+    def build_all_graphs(self):
+        """Construct all Graphs from board"""
+        pass
