@@ -12,7 +12,7 @@ class Board(dict):
         self.corners = ( (0,0), (0,6), (6,0), (6,6) )
         self.allowed_push_in_squares = ( (0,1),(0,3),(0,5),(1,0),(3,0),(5,0),
                                          (6,1),(6,3),(6,5),(1,6),(3,6),(5,6) )
-        self.last_pushed_in = False             #update every move
+        self.last_pushed_in = False              #update every move
         self.last_pushed_out = False             #update every move
         
     def push_in(self, push_in_square):
