@@ -387,8 +387,7 @@ class NewGame:
             return player_obj.current_card_found()
         
     def path_exists(self, square):
-        #~ print "path_exists", square
-        return (Graph(self.board, self.current_player.location).
+        return (Graph(self.board).
             travel_between(self.current_player.location, square))
         
     def setup_tiles(self):
