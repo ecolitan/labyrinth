@@ -131,9 +131,6 @@ class NewGame:
         self.display_everything()
         while 1:
             pygame.time.wait(100)
-            #TODO fix cpu usage in loop
-            #http://www.gamedev.net/topic/518494-pygame-eating-up-my-cpu/
-            
             for event in pygame.event.get():
                 if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN, MOUSEMOTION]:
                     continue 
@@ -162,8 +159,8 @@ class NewGame:
                             if self.mouse_over_push_in(event.pos)[0]:
                                 if self.mouse_over_push_in(event.pos)[2] != self.board.last_pushed_out:
                                     self.board.push_in(self.mouse_over_push_in(event.pos)[2])
+                                    self.update_pushed_out_players()
                                     self.game_phase = "move"
-                        
                             
                 elif event.type == MOUSEMOTION:
                     is_hover = self.mouse_over_push_in(event.pos)
@@ -334,7 +331,7 @@ class NewGame:
         surf = self.menu_area
         blit_tile(tile, rect, surf)
         
-        # Current Player
+        # Current Player in menu
         blit_player(self.current_player, self.menu_area, (50,275))
         
         # Text box
@@ -389,6 +386,12 @@ class NewGame:
     def path_exists(self, square):
         return (Graph(self.board).
             travel_between(self.current_player.location, square))
+        
+    def update_pushed_out_players(self):
+        """Update player location for any players pushed off the board"""
+        for player in self.active_players:
+            if player.location == self.board.last_pushed_out:
+                self.update_player_location(player, self.board.last_pushed_in)
         
     def setup_tiles(self):
         """Initialise all tile objects
