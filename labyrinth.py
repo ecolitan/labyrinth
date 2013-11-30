@@ -47,7 +47,7 @@ class NewGame:
             'home-red', 'home-yellow', 'home-green', 'home-blue']
         
         # Game state
-        self.num_players = 4                #2,3,4 players
+        self.num_players = 2                #2,3,4 players
         self.active_players = []
         self.current_player = ''            #player obj
         self.game_phase = 'push'            # -> (rotate) + "push" -> "move" ->
@@ -315,9 +315,13 @@ class NewGame:
         tile_label = myfont.render("Current Tile", 1, (0,0,0))
         player_label = myfont.render(
             "Current Player: {}".format(self.current_player.color), 1, (0,0,0))
+        player_remaining_cards = myfont.render(
+            "Cards: {}".format(
+                self.current_player.remaining_cards()), 1, (0,0,0))
         self.menu_area.blit(card_label, (50, 130))
         self.menu_area.blit(tile_label, (50, 255))
         self.menu_area.blit(player_label, (5, 380))
+        self.menu_area.blit(player_remaining_cards, (5, 395))
         
         # Current Card
         card = self.current_player.current_card
