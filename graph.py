@@ -7,20 +7,31 @@ import sys
 #~ from graph import Graph
 #~ from labyrinth import NewGame
 
+class GraphObj(dict):
+    def __init__(self, *args, **kwargs ):
+        dict.__init__(self, *args, **kwargs)
+        
+    def __hash__(self):
+        """Hash a GraphObj"""
+        contents = ([val for subl in self.keys() for val in subl] +
+                    [val for subl in self.values() for val in subl])
+        return hash(tuple(set(contents)))
+
 class Graph:
-    def __init__(self, board, square):
+    def __init__(self, board=None, square=None):
         """For a given board position and a square on the board,
         construct the graph of connected squares accessable from that square.
         """
         self.board = board
-        self.square = square
+        #~ self.square = square
         self.all_graphs = []
-        self.graph = {}
-        self.queue = []
-        self.build_graph()
+        #~ self.graph = {}
+        #~ self.queue = []
+        #~ self.build_graph()
+        self.build_all_graphs()
        
-    def build_graph(self):
-        """Construct Graph data structure from board and square"""
+    def build_graph(self, square):
+        """Construct a Graph data structure from starting square"""
         # http://www.python.org/doc/essays/graphs/
         # Data Structure of Graph
             # graph = {'A': ['B', 'C'],
@@ -40,18 +51,20 @@ class Graph:
         # Init loop
         
         # Add initial square to the queue
-        self.queue.append(self.square)
+        queue = []
+        queue.append(square)
+        graph = GraphObj()
         
-        while len(self.queue) != 0:
+        while len(queue) != 0:
             # Take current square for loop from the queue
-            current_square = self.queue.pop()
+            current_square = queue.pop()
             
             # If current square already an key, continue
-            if self.square_in_graph_index(current_square):
+            if self.square_in_graph_index(current_square, graph):
                 continue
                 
             # Add current square to graph
-            self.graph[current_square] = []
+            graph[current_square] = []
 
             # For each direction
             for index in (0,1,2,3):
@@ -67,7 +80,7 @@ class Graph:
                         continue
                         
                     # If possible square already a key, continue
-                    if self.square_in_graph_index(possible_square):
+                    if self.square_in_graph_index(possible_square, graph):
                         continue
                         
                     # If a path connects the current to the possible square
@@ -76,17 +89,19 @@ class Graph:
                         new_square = possible_square
                         
                         # If new square not already in queue
-                        if new_square not in self.queue:
+                        if new_square not in queue:
                             # Add it to queue
-                            self.queue.append(new_square)
+                            queue.append(new_square)
                             
                         # Append new square to list for current square
-                        self.graph[current_square].append(new_square)
+                        graph[current_square].append(new_square)
                         
         # Remove empty nodes from graph
-        for key in self.graph.keys():
-            if self.graph[key] == []:
-                del self.graph[key]
+        for key in graph.keys():
+            if graph[key] == []:
+                del graph[key]
+                
+        return graph
                     
     def find_adjacent_square(self, square, direction):
         """Find coords of the adjacent square in given direction
@@ -114,30 +129,20 @@ class Graph:
         else:
             return False
 
-    def square_in_graph_node(self, square, graph=None):
+    def square_in_graph_node(self, square, graph):
         """Test if square is a node in the graph
         return True or False
         """
-        if graph:
-            _graph = graph
-        else:
-            _graph = self.graph
-            
-        for key in _graph.keys():
-            if square in _graph[key]:
+        for key in graph.keys():
+            if square in graph[key]:
                 return True
         return False
                 
-    def square_in_graph_index(self, square, graph=None):
+    def square_in_graph_index(self, square, graph):
         """Test if square is an index in the graph
         Return True or False
         """
-        if graph:
-            _graph = graph
-        else:
-            _graph = self.graph
-            
-        if square in _graph:
+        if square in graph:
             return True
         else:
             return False
@@ -152,21 +157,37 @@ class Graph:
         else:
             return False
         
-    def travel_between(self, square1, square2, graph=None):
+    def travel_between_in_graph(self, square1, square2, graph):
         """Test if path between two squares in a graph
         Return True or False
         """
-        pass
-        if graph:
-            _graph = graph
-        else:
-            _graph = self.graph
-            
-        if (self.square_in_graph(square1, _graph) and self.square_in_graph(square2, _graph)):
+        if (self.square_in_graph(square1, graph) and self.square_in_graph(square2, graph)):
             return True
         else:
             return False
             
+    def travel_between(self, square1, square2):
+        """Test if path between two squares in any graph
+        return True or False
+        """
+        for graph in self.all_graphs:
+            if self.travel_between_in_graph(square1, square2, graph):
+                return True
+        return False
+            
     def build_all_graphs(self):
         """Construct all Graphs from board"""
-        pass
+        for square in self.board:
+            self.all_graphs.append(self.build_graph(square))
+        self.remove_equivalent_graphs()
+        
+    def remove_equivalent_graphs(self):
+        """Remove duplicate graphs from all_graphs
+        if build_graphs() is working correctly, any two graphs which share a
+        single node or index are duplicate for our purposes.
+        """
+        d = {}
+        for x in self.all_graphs:
+            d[x] = 1
+        self.all_graphs = list(d.keys())
+
