@@ -82,6 +82,16 @@ class BoardTile:
         r = self.exits.pop()
         self.exits.insert(0, r)
         
+    def rotate_n_times(self, n):
+        """Rotate the exits 90deg clockwise n times
+        n in (0,1,2,3)
+        """
+        if n not in (0,1,2,3):
+            raise Exception("Invalid rotation number")
+            
+        for i in xrange(0,n):
+            self.rotate()
+        
     def randomise_orientation(self):
         """Randomise the orientation of exits"""
         for _ in range(randint(0,3)):

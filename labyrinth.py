@@ -49,16 +49,17 @@ class NewGame:
         
         # Game state
         self.num_players = 4
-        self.num_human_players = 2          #2,3,4 players
-        self.num_computer_players = 2       #2,3,4 players
+        self.num_human_players = 4          #2,3,4 players
+        self.num_computer_players = 0       #2,3,4 players
         if not (2 <= (self.num_human_players + self.num_computer_players) <= 4):
             raise Exception("2 - 4 players allowed only")
         self.humans_players = []
         self.computer_players = []
         self.active_players = []
         self.current_player = ''            #player obj
-        self.game_phase = 'push'            # -> (rotate) + "push" -> "move" ->
+        self.game_phase = 'push'            #start -> (rotate) + "push" -> "move" ->
         self.text_message_box = {
+            'start': 'Click start to begin!',
             'push': 'Hover the mouse over the push-in square. Rotate the tile with left-click. Right-Click to push tile in.',
             'move': 'Click a square to move there.',
             'won': 'You Won!!' }
@@ -80,6 +81,8 @@ class NewGame:
         self.mainscreen_size = (1100, 900)
         self.background_color = (160,217,92)
         self.menu_background_color = (71,163,255)
+        self.start_button_color = (255,0,0)
+        self.menu_button_color = (71,163,255)
         self.color_push_in_rect = (153,255,179)
         self.color_no_push_in = (204,0,0)
         self.is_hover = False
@@ -134,9 +137,23 @@ class NewGame:
             Rect(600, 800, 100, 100),
             Rect(600, 0, 100, 100) )
             
+        self.start_screen_text = self.screen.subsurface(
+            Rect(100,100,400,100))
+        self.start_screen_button1 = self.screen.subsurface(
+            Rect(200,200,200,100))
+        self.start_screen_button2 = self.screen.subsurface(
+            Rect(200,300,200,100))
+        self.start_screen_button3 = self.screen.subsurface(
+            Rect(200,400,200,100))
+        self.start_screen_button4 = self.screen.subsurface(
+            Rect(200,600,200,100))
+            
     def game_loop(self):
-        self.display_everything()
-        while 1:
+        """Game loop for capturing user input, displaying screens,
+        updating players and squares.
+        """
+        
+        def process_human_move():
             pygame.time.wait(100)
             for event in pygame.event.get():
                 if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN, MOUSEMOTION]:
@@ -145,7 +162,6 @@ class NewGame:
                     sys.exit()
                 elif event.type == MOUSEBUTTONDOWN:
                     if event.button == 1:
-                        print event.pos
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
                                 self.board.current_tile.rotate()
@@ -174,14 +190,79 @@ class NewGame:
                         self.is_hover = is_hover[1]
                     else:
                         self.is_hover = False    
-                    
-                #TODO enable resize window.
-                #http://stackoverflow.com/questions/20002242/how-to-scale-images-to-screen-size-in-pygame
-                #~ elif event.type == VIDEORESIZE:
-                    #~ self.screen = pygame.display.set_mode(
-                        #~ event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
-                    
             self.display_everything()
+            
+        def process_computer_move():
+            if self.game_phase == "push":
+                #do push and move together
+                #~ rotation, push_in, new_square = self.current_player.find_move(self.board)
+                rotation, push_in, new_square = (0, (1,0), self.current_player.location)
+                self.board.current_tile.rotate_n_times(rotation)
+                self.board.push_in(push_in)
+                self.update_pushed_out_players()
+                self.update_player_location(self.current_player, new_square)
+                if self.update_player_item(self.current_player, new_square) == "winner":
+                    self.game_phase = "won"
+                self.next_active_player()
+                self.display_everything()
+            
+        def collect_start_screen_input():
+            pygame.time.wait(100)
+            for event in pygame.event.get():
+                if event.type not in [pygame.QUIT, MOUSEBUTTONDOWN, MOUSEMOTION]:
+                    continue 
+                if event.type == pygame.QUIT:
+                    sys.exit()
+                elif event.type == MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        if self.game_phase == "push":
+                            if self.mouse_over_push_in(event.pos)[0]:
+                                self.board.current_tile.rotate()
+                        elif self.game_phase == "move":
+                            square = self.mouse_over_board(event.pos)
+                            if square:
+                                #TODO fun for this
+                                if self.path_exists(square):
+                                    self.update_player_location(
+                                        self.current_player, square)
+                                    if self.update_player_item(self.current_player, square) == "winner":
+                                        self.game_phase == "won"
+                                    self.next_active_player()
+                                    self.game_phase = "push"
+                    elif event.button == 3:
+                        if self.game_phase == "push":
+                            if self.mouse_over_push_in(event.pos)[0]:
+                                if self.mouse_over_push_in(event.pos)[2] != self.board.last_pushed_out:
+                                    self.board.push_in(self.mouse_over_push_in(event.pos)[2])
+                                    self.update_pushed_out_players()
+                                    self.game_phase = "move"
+                            
+                elif event.type == MOUSEMOTION:
+                    is_hover = self.mouse_over_push_in(event.pos)
+                    if is_hover[0]:
+                        self.is_hover = is_hover[1]
+                    else:
+                        self.is_hover = False
+            self.display_start_screen()
+            #~ self.display_everything()
+            
+        #~ self.display_everything()
+        self.display_start_screen()
+        while 1:
+            collect_start_screen_input()
+            #~ if self.game_phase == "start":
+                #~ collect_start_screen_input()
+            #~ elif self.current_player.iscomputer is False:
+                #~ process_human_move()
+            #~ elif self.current_player.iscomputer is True:
+                #~ process_computer_move()
+                
+            
+            #~ if self.game_phase == "won":
+                #~ self.display_won_screen(self.current_player)
+                #~ continue
+                #~ 
+            
         
     def display_everything(self):
         """Draw everything to the screen"""
@@ -356,17 +437,64 @@ class NewGame:
         
         # Update display
         pygame.display.flip()
+            
+    def display_start_screen(self):
+        """display the start screen"""
+        self.screen.fill(self.background_color)
+        border_color = (0,0,0)
+        game_area_rect = (0,0,900,900)
+        border_width = 4
         
+        self.start_screen_text.fill(self.menu_background_color)
+        self.start_screen_button1.fill(self.menu_button_color)
+        self.start_screen_button2.fill(self.menu_button_color)
+        self.start_screen_button3.fill(self.menu_button_color)
+        self.start_screen_button4.fill(self.start_button_color)
+        
+        pygame.draw.rect(
+            self.start_screen_text,
+            border_color,
+            Rect(0,0,400,100),
+            border_width)
+        pygame.draw.rect(
+            self.start_screen_button1,
+            border_color,
+            Rect(0,0,200,100),
+            border_width)
+        pygame.draw.rect(
+            self.start_screen_button2,
+            border_color,
+            Rect(0,0,200,100),
+            border_width)
+        pygame.draw.rect(
+            self.start_screen_button3,
+            border_color,
+            Rect(0,0,200,100),
+            border_width)
+        pygame.draw.rect(
+            self.start_screen_button4,
+            border_color,
+            Rect(0,0,200,100),
+            border_width)
+            
+        myfont = pygame.font.SysFont("monospace", 45, bold=True)
+        t = lambda text: myfont.render(text, 1, (0,0,0))
+        self.start_screen_text.blit(t('Num. Computers'), (12, 25))
+        self.start_screen_button1.blit(t('1'), (90, 25))
+        self.start_screen_button2.blit(t('2'), (90, 25))
+        self.start_screen_button3.blit(t('3'), (90, 25))
+        self.start_screen_button4.blit(t('Start!'), (25, 25))
+            
     def mouse_over_push_in(self, mouse_location):
         """Test if mouse hovering over a push in location
-        Return tilerect or False
+        Return (True|False, tilerect, square)
         """
         mouse_x, mouse_y = mouse_location
         for _rect in self.game_push_in_rects:
             if _rect.collidepoint(mouse_x-200, mouse_y):
                 _rectpos = (_rect.left,_rect.top)
                 return (True, _rect, self.game_push_in_map[_rectpos])
-        return (False,False)
+        return (False,False,False)
         
     def mouse_over_board(self, mouse_location):
         """Test if mouse over the board

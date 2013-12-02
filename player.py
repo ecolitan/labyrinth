@@ -14,6 +14,7 @@ class Player:
         self.home = color_location[1]
         self.current_card = False
         self.found_cards = []
+        self.iscomputer = False
         
         self.player_images = {'yellow': 'player-yellow',
                               'blue': 'player-blue',
