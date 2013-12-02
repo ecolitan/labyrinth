@@ -455,8 +455,10 @@ class NewGame:
             tiles.append(BoardTile([True,True,False,False], item=items_list.pop(), random_orientation=True))
             
         #Check all items and actions assigned
-        if (len(items_list) or len(actions_list)) != 0:
-            raise Exception
+        if len(items_list) != 0:
+            raise Exception("Leftover tiles!")
+        if len(actions_list) != 0:
+            raise Exception("Leftover actions!")
             
         #shuffle tiles before distributing to remaining board positions
         shuffle(tiles)
