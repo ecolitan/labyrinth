@@ -10,6 +10,7 @@ from player import Player
 from tile import BoardTile
 from graph import Graph
 from board import Board
+from computerplayer import ComputerPlayer
 
 if not pygame.font: print 'Warning, fonts disabled'
 if not pygame.mixer: print 'Warning, sound disabled'
@@ -47,7 +48,10 @@ class NewGame:
             'home-red', 'home-yellow', 'home-green', 'home-blue']
         
         # Game state
-        self.num_players = 2                #2,3,4 players
+        self.num_players = 3                #2,3,4 players
+        self.num_computer_players = 2       #2,3,4 players
+        if not (2 <= (self.num_players + self.num_computer_players) <= 4):
+            raise Exception("2 - 4 players allowed only")
         self.active_players = []
         self.current_player = ''            #player obj
         self.game_phase = 'push'            # -> (rotate) + "push" -> "move" ->
@@ -153,7 +157,6 @@ class NewGame:
                                         self.game_phase == "won"
                                     self.next_active_player()
                                     self.game_phase = "push"
-                                    
                     elif event.button == 3:
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
