@@ -2,16 +2,16 @@
 
 class Player:
     class_counter = 0
-    def __init__(self, color, location):
+    def __init__(self, color_location):
         self.id = Player.class_counter
         Player.class_counter += 1
         
         self.isactive = False
         self.name = ''
-        self.color = color
+        self.color = color_location[0]
         self.cards = []
-        self.location = location
-        self.home = location
+        self.location = color_location[1]
+        self.home = color_location[1]
         self.current_card = False
         self.found_cards = []
         

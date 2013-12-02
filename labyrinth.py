@@ -48,10 +48,13 @@ class NewGame:
             'home-red', 'home-yellow', 'home-green', 'home-blue']
         
         # Game state
-        self.num_players = 3                #2,3,4 players
+        self.num_players = 4
+        self.num_human_players = 2          #2,3,4 players
         self.num_computer_players = 2       #2,3,4 players
-        if not (2 <= (self.num_players + self.num_computer_players) <= 4):
+        if not (2 <= (self.num_human_players + self.num_computer_players) <= 4):
             raise Exception("2 - 4 players allowed only")
+        self.humans_players = []
+        self.computer_players = []
         self.active_players = []
         self.current_player = ''            #player obj
         self.game_phase = 'push'            # -> (rotate) + "push" -> "move" ->
@@ -479,27 +482,35 @@ class NewGame:
         #~ _f.close()
         
     def init_players(self):
-        """Initialise the players"""
-        
+        """Initialise the human and computer player objects
+        2 <= (Human players + Computer players) <= 4
+        """
         ## Setup players
-        self.player1 = Player('blue', (0,0))
-        self.player2 = Player('red', (6,0))
-        self.player3 = Player('green', (0,6))
-        self.player4 = Player('yellow', (6,6))
+        available_color_locations = [('blue',   (0,0)),
+                                     ('red',    (6,0)),
+                                     ('green',  (0,6)),
+                                     ('yellow', (6,6)) ]
         
-        # Activate players
-        for i in xrange(0,self.num_players):
-            [self.player1, self.player2, self.player3, self.player4][i].isactive = True
-        
+        for i in xrange(0, self.num_human_players):
+            player = Player(available_color_locations.pop())
+            player.isactive = True
+            self.humans_players.append(player)
+            
+        for i in xrange(0, self.num_computer_players):
+            player = ComputerPlayer(available_color_locations.pop())
+            player.isactive = True
+            self.computer_players.append(player)
+            
+        self.active_players = self.computer_players + self.humans_players
+            
         # Setup Cards
         self.cards_per_player = len(self.items)
         shuffle(self.items)
         hands = [self.items[i::self.num_players] for i in range(0, self.num_players)]
-        for player in [self.player1, self.player2, self.player3, self.player4]:
-            if player.isactive is True:
-                self.active_players.append(player)
-                player.cards = hands.pop()
-                player.draw_card()
+        
+        for player in self.active_players:
+            player.cards = hands.pop()
+            player.draw_card()
                 
         # Set squares to occupied
         for player in self.active_players:

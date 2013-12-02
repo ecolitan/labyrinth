@@ -13,10 +13,10 @@ class TestPlayer(unittest.TestCase):
         pass
         
     def test_attributes(self):
-        self.assertIs(type(Player('green', (0,0)).id), int)
-        self.assertIs(type(Player('green', (0,0)).isactive), bool)
-        self.assertIs(type(Player('green', (0,0)).name), str)
-        self.assertIs(type(Player('green', (0,0)).color), str)
+        self.assertIs(type(Player(('green', (0,0))).id), int)
+        self.assertIs(type(Player(('green', (0,0))).isactive), bool)
+        self.assertIs(type(Player(('green', (0,0))).name), str)
+        self.assertIs(type(Player(('green', (0,0))).color), str)
         
 class TestTile(unittest.TestCase):
     def setUp(self):
