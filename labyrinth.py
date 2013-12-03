@@ -159,7 +159,7 @@ class NewGame:
                         elif self.game_phase == "move":
                             square = self.mouse_over_board(event.pos)
                             if square:
-                                #TODO fun for this
+                                #TODO function for this?
                                 if self.path_exists(square):
                                     self.update_player_location(
                                         self.current_player, square)
@@ -226,6 +226,10 @@ class NewGame:
                 collect_start_screen_input()
             elif self.game_phase == "won":
                 self.display_everything().game_over_screen()
+            elif (self.game_phase == "move" and
+                  self.no_possible_squares()):
+                self.next_active_player()
+                self.game_phase = "push"
             elif self.current_player.iscomputer is False:
                 process_human_move()
             elif self.current_player.iscomputer is True:
@@ -468,6 +472,12 @@ class NewGame:
         for player in self.active_players:
             if player.location == self.board.last_pushed_out:
                 self.update_player_location(player, self.board.last_pushed_in)
+        
+    def no_possible_squares(self):
+        """Check if possible moves available
+        return True or False
+        """
+        return Graph(self.board).graph_exists(self.current_player.location)
         
     def setup_tiles(self):
         """Initialise all tile objects

@@ -190,4 +190,12 @@ class Graph:
         for x in self.all_graphs:
             d[x] = 1
         self.all_graphs = list(d.keys())
-
+        
+    def graph_exists(self, square):
+        """Test if graph for a square exists
+        Return True or False
+        """
+        for graph in self.all_graphs:
+            if self.square_in_graph(square, graph):
+                return False
+        return True
