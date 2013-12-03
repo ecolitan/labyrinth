@@ -224,6 +224,8 @@ class NewGame:
         while 1:
             if self.game_phase == "start":
                 collect_start_screen_input()
+            elif self.game_phase == "won":
+                self.display_everything().game_over_screen()
             elif self.current_player.iscomputer is False:
                 process_human_move()
             elif self.current_player.iscomputer is True:
@@ -330,6 +332,17 @@ class NewGame:
             except the one where you may not push!
             """
             pygame.draw.rect(surface, color, rect)
+            
+        def game_over_screen():
+            """Blit a final screen for game over"""
+            self.screen.fill(self.background_color)
+            blit_text(
+                self.screen,
+                "Game Over!",
+                (0,0,0),
+                (400,500,190,190),
+                myfont )
+            raw_input()
         
         # Background
         self.screen.fill(self.background_color)
@@ -529,10 +542,6 @@ class NewGame:
         # Set player home squares
         for square in ( (0,0), (0,6), (6,6), (6,0) ):
             self.board[square].item = colors_list.pop()
-            
-        #~ _f = open("tests/testboard1.pickle", "w+")
-        #~ pickle.dump(self.board, _f, pickle.HIGHEST_PROTOCOL)
-        #~ _f.close()
         
     def init_players(self):
         """Initialise the human and computer player objects
