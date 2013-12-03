@@ -9,3 +9,5 @@ class ComputerPlayer(Player):
     def find_move(self, board):
         """Find the next move
         Return (rotation, push_in, new_square)"""
+        pass
+        
