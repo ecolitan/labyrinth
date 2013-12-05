@@ -452,9 +452,9 @@ class NewGame:
             
     def update_player_location(self, player_obj, square):
         """Update all the variables needed to move player to another square"""
-        self.board[player_obj.location].is_occupied = False
+        self.board[player_obj.location].del_resident(player_obj)
         player_obj.location = square
-        self.board[square].is_occupied = True
+        self.board[square].add_resident(player_obj)
         
     def update_player_item(self, player_obj, square):
         """Update the players item attributes
@@ -586,7 +586,7 @@ class NewGame:
                 
         # Set squares to occupied
         for player in self.active_players:
-            self.board[player.location].is_occupied = True
+            self.board[player.location].add_resident(player)
         
         # Current Player to go
         self.current_player = self.active_players[0]
