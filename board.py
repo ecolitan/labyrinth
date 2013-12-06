@@ -71,3 +71,11 @@ class Board(dict):
         self[player_obj.location].del_resident(player_obj)
         player_obj.location = square
         self[square].add_resident(player_obj)
+            
+    def update_pushed_out_players(self):
+        """Update player location for any players pushed off the board"""
+        for player in self.active_players:
+            if player.location == self.last_pushed_out:
+                self.update_player_location(player, self.last_pushed_in)
+                
+                

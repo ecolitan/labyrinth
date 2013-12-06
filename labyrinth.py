@@ -165,7 +165,7 @@ class NewGame:
                             if self.mouse_over_push_in(event.pos)[0]:
                                 if self.mouse_over_push_in(event.pos)[2] != self.board.last_pushed_out:
                                     self.board.push_in(self.mouse_over_push_in(event.pos)[2])
-                                    self.update_pushed_out_players()
+                                    self.board.update_pushed_out_players()
                                     
                                     self.game_phase = "move"
                             
@@ -184,7 +184,7 @@ class NewGame:
                 rotation, push_in, new_square = (0, (1,0), self.current_player.location)
                 self.board.current_tile.rotate_n_times(rotation)
                 self.board.push_in(push_in)
-                self.update_pushed_out_players()
+                self.board.update_pushed_out_players()
                 self.board.update_player_location(self.current_player, new_square)
                 if self.update_player_item(self.current_player, new_square) == "winner":
                     self.game_phase = "won"
@@ -227,13 +227,6 @@ class NewGame:
                 process_human_move()
             elif self.current_player.iscomputer is True:
                 process_computer_move()
-                
-            
-            #~ if self.game_phase == "won":
-                #~ self.display_won_screen(self.current_player)
-                #~ continue
-                #~ 
-            
         
     def display_everything(self):
         """Draw everything to the screen"""
@@ -453,12 +446,7 @@ class NewGame:
     def path_exists(self, square):
         return (Graph(self.board).
             travel_between(self.current_player.location, square))
-        
-    def update_pushed_out_players(self):    #move to board
-        """Update player location for any players pushed off the board"""
-        for player in self.board.active_players:
-            if player.location == self.board.last_pushed_out:
-                self.board.update_player_location(player, self.board.last_pushed_in)
+
         
     def no_possible_squares(self):
         """Check if possible moves available
