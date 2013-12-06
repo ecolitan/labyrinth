@@ -220,8 +220,8 @@ class NewGame:
                 collect_start_screen_input()
             elif self.game_phase == "won":
                 self.display_everything().game_over_screen()
-            elif (self.game_phase == "move" and
-                  self.no_possible_squares()):
+            elif (self.game_phase == "move" and not
+                  self.board.possible_moves_exist(self.board.current_player)):
                 self.board.next_active_player()
                 self.game_phase = "push"
             elif self.board.current_player.iscomputer is False:
@@ -436,12 +436,6 @@ class NewGame:
             x_pos = (mouse_x - 300) / 100
             y_pos = (mouse_y - 100) / 100
             return (x_pos,y_pos)
-        
-    def no_possible_squares(self):
-        """Check if possible moves available
-        return True or False
-        """
-        return Graph(self.board).graph_exists(self.board.current_player.location)
         
     def setup_tiles(self):
         """Initialise all tile objects

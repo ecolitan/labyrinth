@@ -193,5 +193,5 @@ class Graph:
         """
         for graph in self.all_graphs:
             if self.square_in_graph(square, graph):
-                return False
-        return True
+                return True
+        return False

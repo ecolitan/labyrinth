@@ -100,3 +100,10 @@ class Board(dict):
         """Use graph to test if a path exists between two squares"""
         return (Graph(self).
             travel_between(square1, square2))
+            
+    def possible_moves_exist(self, player_obj):
+        """Check if possible moves available
+        return True or False
+        """
+        return (Graph(self).
+            graph_exists(player_obj.location))
