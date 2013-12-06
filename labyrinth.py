@@ -158,7 +158,7 @@ class NewGame:
                                         self.board.current_player, square)
                                     if self.update_player_item(self.board.current_player, square) == "winner":
                                         self.game_phase == "won"
-                                    self.next_active_player()
+                                    self.board.next_active_player()
                                     self.game_phase = "push"
                     elif event.button == 3:
                         if self.game_phase == "push":
@@ -188,7 +188,7 @@ class NewGame:
                 self.board.update_player_location(self.board.current_player, new_square)
                 if self.update_player_item(self.board.current_player, new_square) == "winner":
                     self.game_phase = "won"
-                self.next_active_player()
+                self.board.next_active_player()
                 self.display_everything()
             
         def collect_start_screen_input():
@@ -221,7 +221,7 @@ class NewGame:
                 self.display_everything().game_over_screen()
             elif (self.game_phase == "move" and
                   self.no_possible_squares()):
-                self.next_active_player()
+                self.board.next_active_player()
                 self.game_phase = "push"
             elif self.board.current_player.iscomputer is False:
                 process_human_move()
@@ -568,11 +568,7 @@ class NewGame:
         # Current Player to go
         self.board.current_player = self.board.active_players[0]
         
-    def next_active_player(self):
-        """Change self.board.current_player to the next active player"""
-        p = self.board.active_players.pop()
-        self.board.active_players.insert(0, p)
-        self.board.current_player = self.board.active_players[0]
+    
         
     def load_images(self):
         """Load tile images into string buffers

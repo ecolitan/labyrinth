@@ -79,4 +79,9 @@ class Board(dict):
             if player.location == self.last_pushed_out:
                 self.update_player_location(player, self.last_pushed_in)
                 
+    def next_active_player(self):
+        """Change self.current_player to the next active player"""
+        p = self.active_players.pop()
+        self.active_players.insert(0, p)
+        self.current_player = self.active_players[0]
                 
