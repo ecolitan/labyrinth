@@ -65,3 +65,9 @@ class Board(dict):
             print
             i += 7; j += 7
         print
+        
+    def update_player_location(self, player_obj, square):
+        """Update all the variables needed to move player to another square"""
+        self[player_obj.location].del_resident(player_obj)
+        player_obj.location = square
+        self[square].add_resident(player_obj)

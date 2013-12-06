@@ -154,7 +154,7 @@ class NewGame:
                             if square:
                                 #TODO function for this?
                                 if self.path_exists(square):
-                                    self.update_player_location(
+                                    self.board.update_player_location(
                                         self.current_player, square)
                                     if self.update_player_item(self.current_player, square) == "winner":
                                         self.game_phase == "won"
@@ -185,7 +185,7 @@ class NewGame:
                 self.board.current_tile.rotate_n_times(rotation)
                 self.board.push_in(push_in)
                 self.update_pushed_out_players()
-                self.update_player_location(self.current_player, new_square)
+                self.board.update_player_location(self.current_player, new_square)
                 if self.update_player_item(self.current_player, new_square) == "winner":
                     self.game_phase = "won"
                 self.next_active_player()
@@ -442,12 +442,6 @@ class NewGame:
             x_pos = (mouse_x - 300) / 100
             y_pos = (mouse_y - 100) / 100
             return (x_pos,y_pos)
-            
-    def update_player_location(self, player_obj, square):
-        """Update all the variables needed to move player to another square"""
-        self.board[player_obj.location].del_resident(player_obj)
-        player_obj.location = square
-        self.board[square].add_resident(player_obj)
         
     def update_player_item(self, player_obj, square):
         """Update the players item attributes
@@ -464,7 +458,7 @@ class NewGame:
         """Update player location for any players pushed off the board"""
         for player in self.board.active_players:
             if player.location == self.board.last_pushed_out:
-                self.update_player_location(player, self.board.last_pushed_in)
+                self.board.update_player_location(player, self.board.last_pushed_in)
         
     def no_possible_squares(self):
         """Check if possible moves available
