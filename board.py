@@ -85,3 +85,9 @@ class Board(dict):
         self.active_players.insert(0, p)
         self.current_player = self.active_players[0]
                 
+    def update_player_item(self, player_obj, square):
+        """Update the players item attributes
+        Return winner if no more items for player
+        """
+        if self[square].item == player_obj.current_card:
+            return player_obj.current_card_found()

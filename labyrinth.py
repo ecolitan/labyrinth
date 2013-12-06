@@ -156,7 +156,7 @@ class NewGame:
                                 if self.path_exists(square):
                                     self.board.update_player_location(
                                         self.board.current_player, square)
-                                    if self.update_player_item(self.board.current_player, square) == "winner":
+                                    if self.board.update_player_item(self.board.current_player, square) == "winner":
                                         self.game_phase == "won"
                                     self.board.next_active_player()
                                     self.game_phase = "push"
@@ -186,7 +186,7 @@ class NewGame:
                 self.board.push_in(push_in)
                 self.board.update_pushed_out_players()
                 self.board.update_player_location(self.board.current_player, new_square)
-                if self.update_player_item(self.board.current_player, new_square) == "winner":
+                if self.board.update_player_item(self.board.current_player, new_square) == "winner":
                     self.game_phase = "won"
                 self.board.next_active_player()
                 self.display_everything()
@@ -436,17 +436,9 @@ class NewGame:
             y_pos = (mouse_y - 100) / 100
             return (x_pos,y_pos)
         
-    def update_player_item(self, player_obj, square):
-        """Update the players item attributes
-        Return winner if no more items for player
-        """
-        if self.board[square].item == player_obj.current_card:
-            return player_obj.current_card_found()
-        
     def path_exists(self, square):
         return (Graph(self.board).
             travel_between(self.board.current_player.location, square))
-
         
     def no_possible_squares(self):
         """Check if possible moves available
