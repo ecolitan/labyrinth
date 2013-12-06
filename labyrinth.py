@@ -53,21 +53,15 @@ class NewGame:
         if not (2 <= (self.num_human_players + self.num_computer_players) <= 4):
             raise Exception("2 - 4 players allowed only")
         
-        self.humans_players = []
-        self.computer_players = []
         self.active_players = []
-        self.current_player = ''            #player obj
+        self.current_player = ''
+        
         self.game_phase = 'start'            #start -> (rotate) + "push" -> "move" ->
         self.text_message_box = {
             'start': 'Click start to begin!',
             'push': 'Hover the mouse over the push-in square. Rotate the tile with left-click. Right-Click to push tile in.',
             'move': 'Click a square to move there.',
             'won': 'You Won!!' }
-        #~ # Initialise Game
-        #~ self.setup_tiles()
-        #~ #players must be setup after tiles
-        #~ self.init_players()
-        #~ self.load_images()
         
         if self.cli == False:
             self.setup_pygame()
@@ -562,18 +556,20 @@ class NewGame:
                                      ('red',    (6,0)),
                                      ('green',  (0,6)),
                                      ('yellow', (6,6)) ]
+        human_players = []
+        computer_players = []
         
         for i in xrange(0, self.num_human_players):
             player = Player(available_color_locations.pop())
             player.isactive = True
-            self.humans_players.append(player)
+            human_players.append(player)
             
         for i in xrange(0, self.num_computer_players):
             player = ComputerPlayer(available_color_locations.pop())
             player.isactive = True
-            self.computer_players.append(player)
+            computer_players.append(player)
             
-        self.active_players = self.computer_players + self.humans_players
+        self.active_players = computer_players + human_players
             
         # Setup Cards
         self.cards_per_player = len(self.items)
