@@ -60,6 +60,9 @@ class Board(dict):
         self.last_pushed_in = push_in_square
         self.last_pushed_out = self.row_lists[push_in_square][-1]
         
+        # Update player positions on the pushed out row
+        self.update_pushed_out_players()
+        
     def print_board(self):
         """Print text representation of the board"""
         keys = sorted(self.keys())

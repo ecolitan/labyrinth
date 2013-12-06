@@ -166,8 +166,6 @@ class NewGame:
                             if self.mouse_over_push_in(event.pos)[0]:
                                 if self.mouse_over_push_in(event.pos)[2] != self.board.last_pushed_out:
                                     self.board.push_in(self.mouse_over_push_in(event.pos)[2])
-                                    self.board.update_pushed_out_players()
-                                    
                                     self.game_phase = "move"
                             
                 elif event.type == MOUSEMOTION:
@@ -185,7 +183,6 @@ class NewGame:
                 rotation, push_in, new_square = (0, (1,0), self.board.current_player.location)
                 self.board.current_tile.rotate_n_times(rotation)
                 self.board.push_in(push_in)
-                self.board.update_pushed_out_players()
                 self.board.update_player_location(self.board.current_player, new_square)
                 if self.board.update_player_item(self.board.current_player, new_square) == "winner":
                     self.game_phase = "won"
