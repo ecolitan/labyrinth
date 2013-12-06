@@ -53,7 +53,7 @@ class NewGame:
         if not (2 <= (self.num_human_players + self.num_computer_players) <= 4):
             raise Exception("2 - 4 players allowed only")
         
-        self.current_player = ''
+        #~ self.current_player = None
         
         self.game_phase = 'start'            #start -> (rotate) + "push" -> "move" ->
         self.text_message_box = {
@@ -155,8 +155,8 @@ class NewGame:
                                 #TODO function for this?
                                 if self.path_exists(square):
                                     self.board.update_player_location(
-                                        self.current_player, square)
-                                    if self.update_player_item(self.current_player, square) == "winner":
+                                        self.board.current_player, square)
+                                    if self.update_player_item(self.board.current_player, square) == "winner":
                                         self.game_phase == "won"
                                     self.next_active_player()
                                     self.game_phase = "push"
@@ -180,13 +180,13 @@ class NewGame:
         def process_computer_move():
             if self.game_phase == "push":
                 #do push and move together
-                #~ rotation, push_in, new_square = self.current_player.find_move(self.board)
-                rotation, push_in, new_square = (0, (1,0), self.current_player.location)
+                #~ rotation, push_in, new_square = self.board.current_player.find_move(self.board)
+                rotation, push_in, new_square = (0, (1,0), self.board.current_player.location)
                 self.board.current_tile.rotate_n_times(rotation)
                 self.board.push_in(push_in)
                 self.board.update_pushed_out_players()
-                self.board.update_player_location(self.current_player, new_square)
-                if self.update_player_item(self.current_player, new_square) == "winner":
+                self.board.update_player_location(self.board.current_player, new_square)
+                if self.update_player_item(self.board.current_player, new_square) == "winner":
                     self.game_phase = "won"
                 self.next_active_player()
                 self.display_everything()
@@ -223,9 +223,9 @@ class NewGame:
                   self.no_possible_squares()):
                 self.next_active_player()
                 self.game_phase = "push"
-            elif self.current_player.iscomputer is False:
+            elif self.board.current_player.iscomputer is False:
                 process_human_move()
-            elif self.current_player.iscomputer is True:
+            elif self.board.current_player.iscomputer is True:
                 process_computer_move()
         
     def display_everything(self):
@@ -376,17 +376,17 @@ class NewGame:
         card_label = myfont.render("Current Card", 1, (0,0,0))
         tile_label = myfont.render("Current Tile", 1, (0,0,0))
         player_label = myfont.render(
-            "Current Player: {}".format(self.current_player.color), 1, (0,0,0))
+            "Current Player: {}".format(self.board.current_player.color), 1, (0,0,0))
         player_remaining_cards = myfont.render(
             "Cards: {}".format(
-                self.current_player.remaining_cards()), 1, (0,0,0))
+                self.board.current_player.remaining_cards()), 1, (0,0,0))
         self.menu_area.blit(card_label, (50, 130))
         self.menu_area.blit(tile_label, (50, 255))
         self.menu_area.blit(player_label, (5, 380))
         self.menu_area.blit(player_remaining_cards, (5, 395))
         
         # Current Card
-        card = self.current_player.current_card
+        card = self.board.current_player.current_card
         rect = Rect(50,25,100,100)
         surf = self.menu_area
         blit_card(card, rect, surf)
@@ -398,7 +398,7 @@ class NewGame:
         blit_tile(tile, rect, surf)
         
         # Current Player in menu
-        blit_player(self.current_player, self.menu_area, (50,275))
+        blit_player(self.board.current_player, self.menu_area, (50,275))
         
         # Text box
         blit_text(self.menu_area, self.text_message_box[self.game_phase],
@@ -445,14 +445,14 @@ class NewGame:
         
     def path_exists(self, square):
         return (Graph(self.board).
-            travel_between(self.current_player.location, square))
+            travel_between(self.board.current_player.location, square))
 
         
     def no_possible_squares(self):
         """Check if possible moves available
         return True or False
         """
-        return Graph(self.board).graph_exists(self.current_player.location)
+        return Graph(self.board).graph_exists(self.board.current_player.location)
         
     def setup_tiles(self):
         """Initialise all tile objects
@@ -566,13 +566,13 @@ class NewGame:
             self.board[player.location].add_resident(player)
         
         # Current Player to go
-        self.current_player = self.board.active_players[0]
+        self.board.current_player = self.board.active_players[0]
         
     def next_active_player(self):
-        """Change self.current_player to the next active player"""
+        """Change self.board.current_player to the next active player"""
         p = self.board.active_players.pop()
         self.board.active_players.insert(0, p)
-        self.current_player = self.board.active_players[0]
+        self.board.current_player = self.board.active_players[0]
         
     def load_images(self):
         """Load tile images into string buffers
