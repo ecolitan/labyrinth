@@ -560,8 +560,6 @@ class NewGame:
         # Current Player to go
         self.board.current_player = self.board.active_players[0]
         
-    
-        
     def load_images(self):
         """Load tile images into string buffers
         store buffers in the dict self.image_buffer
