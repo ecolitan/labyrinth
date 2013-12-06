@@ -12,22 +12,18 @@ class GraphObj(dict):
         dict.__init__(self, *args, **kwargs)
         
     def __hash__(self):
-        """Hash a GraphObj"""
+        """Define hash for the GraphObj dict"""
         contents = ([val for subl in self.keys() for val in subl] +
                     [val for subl in self.values() for val in subl])
         return hash(tuple(set(contents)))
 
 class Graph:
-    def __init__(self, board=None, square=None):
+    def __init__(self, board=None):
         """For a given board position and a square on the board,
         construct the graph of connected squares accessable from that square.
         """
         self.board = board
-        #~ self.square = square
         self.all_graphs = []
-        #~ self.graph = {}
-        #~ self.queue = []
-        #~ self.build_graph()
         self.build_all_graphs()
        
     def build_graph(self, square):
