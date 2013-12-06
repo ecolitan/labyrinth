@@ -53,7 +53,6 @@ class NewGame:
         if not (2 <= (self.num_human_players + self.num_computer_players) <= 4):
             raise Exception("2 - 4 players allowed only")
         
-        self.active_players = []
         self.current_player = ''
         
         self.game_phase = 'start'            #start -> (rotate) + "push" -> "move" ->
@@ -356,7 +355,7 @@ class NewGame:
             blit_tile(tile, rect, surf)
                 
         # Player Figures
-        for player in self.active_players:
+        for player in self.board.active_players:
             blit_player(player, self.board_area)
              
         # Push-In Squares at edges
@@ -461,9 +460,9 @@ class NewGame:
         return (Graph(self.board).
             travel_between(self.current_player.location, square))
         
-    def update_pushed_out_players(self):
+    def update_pushed_out_players(self):    #move to board
         """Update player location for any players pushed off the board"""
-        for player in self.active_players:
+        for player in self.board.active_players:
             if player.location == self.board.last_pushed_out:
                 self.update_player_location(player, self.board.last_pushed_in)
         
@@ -569,29 +568,29 @@ class NewGame:
             player.isactive = True
             computer_players.append(player)
             
-        self.active_players = computer_players + human_players
+        self.board.active_players = computer_players + human_players
             
         # Setup Cards
         self.cards_per_player = len(self.items)
         shuffle(self.items)
         hands = [self.items[i::self.num_players] for i in range(0, self.num_players)]
         
-        for player in self.active_players:
+        for player in self.board.active_players:
             player.cards = hands.pop()
             player.draw_card()
                 
         # Set squares to occupied
-        for player in self.active_players:
+        for player in self.board.active_players:
             self.board[player.location].add_resident(player)
         
         # Current Player to go
-        self.current_player = self.active_players[0]
+        self.current_player = self.board.active_players[0]
         
     def next_active_player(self):
         """Change self.current_player to the next active player"""
-        p = self.active_players.pop()
-        self.active_players.insert(0, p)
-        self.current_player = self.active_players[0]
+        p = self.board.active_players.pop()
+        self.board.active_players.insert(0, p)
+        self.current_player = self.board.active_players[0]
         
     def load_images(self):
         """Load tile images into string buffers
