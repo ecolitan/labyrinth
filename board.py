@@ -1,3 +1,7 @@
+# coding: utf8
+
+from graph import Graph
+
 class Board(dict):
     def __init__(self, *args, **kwargs ):
         dict.__init__(self, *args, **kwargs)
@@ -91,3 +95,8 @@ class Board(dict):
         """
         if self[square].item == player_obj.current_card:
             return player_obj.current_card_found()
+            
+    def path_exists(self, square1, square2):
+        """Use graph to test if a path exists between two squares"""
+        return (Graph(self).
+            travel_between(square1, square2))

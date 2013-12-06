@@ -153,7 +153,8 @@ class NewGame:
                             square = self.mouse_over_board(event.pos)
                             if square:
                                 #TODO function for this?
-                                if self.path_exists(square):
+                                if self.board.path_exists(
+                                    self.board.current_player.location, square):
                                     self.board.update_player_location(
                                         self.board.current_player, square)
                                     if self.board.update_player_item(self.board.current_player, square) == "winner":
@@ -435,10 +436,6 @@ class NewGame:
             x_pos = (mouse_x - 300) / 100
             y_pos = (mouse_y - 100) / 100
             return (x_pos,y_pos)
-        
-    def path_exists(self, square):
-        return (Graph(self.board).
-            travel_between(self.board.current_player.location, square))
         
     def no_possible_squares(self):
         """Check if possible moves available
