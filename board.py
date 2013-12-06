@@ -60,8 +60,10 @@ class Board(dict):
         self.last_pushed_in = push_in_square
         self.last_pushed_out = self.row_lists[push_in_square][-1]
         
-        # Update player positions on the pushed out row
-        self.update_pushed_out_players()
+        # Update player positions on the pushed row
+        self.update_pushed_players(push_in_square)
+        
+        
         
     def print_board(self):
         """Print text representation of the board"""
@@ -80,11 +82,15 @@ class Board(dict):
         player_obj.location = square
         self[square].add_resident(player_obj)
             
-    def update_pushed_out_players(self):
-        """Update player location for any players pushed off the board"""
+    def update_pushed_players(self, push_in_square):
+        """Update locations of any players standing on a pushed row"""
         for player in self.active_players:
             if player.location == self.last_pushed_out:
                 self.update_player_location(player, self.last_pushed_in)
+            elif player.location in self.row_lists[push_in_square]:
+                index = self.row_lists[push_in_square].index(player.location)
+                self.update_player_location(
+                    player, self.row_lists[push_in_square][index + 1])
                 
     def next_active_player(self):
         """Change self.current_player to the next active player"""
@@ -110,3 +116,4 @@ class Board(dict):
         """
         return (Graph(self).
             graph_exists(player_obj.location))
+            
