@@ -11,3 +11,8 @@ class ComputerPlayer(Player):
         Return (rotation, push_in, new_square)"""
         pass
         
+    def possible_push_in(self, board):
+        """Return list of possible push_in squares"""
+        push_ins = set(board.allowed_push_in_squares)
+        last = set(board.self.last_pushed_out,)
+        return list(push_ins.difference(last))
