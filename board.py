@@ -63,8 +63,6 @@ class Board(dict):
         # Update player positions on the pushed row
         self.update_pushed_players(push_in_square)
         
-        
-        
     def print_board(self):
         """Print text representation of the board"""
         keys = sorted(self.keys())
