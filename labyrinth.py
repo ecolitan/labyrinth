@@ -53,14 +53,14 @@ class NewGame:
         if not (2 <= (self.num_human_players + self.num_computer_players) <= 4):
             raise Exception("2 - 4 players allowed only")
         
-        #~ self.current_player = None
-        
         self.game_phase = 'start'            #start -> (rotate) + "push" -> "move" ->
         self.text_message_box = {
             'start': 'Click start to begin!',
             'push': 'Hover the mouse over the push-in square. Rotate the tile with left-click. Right-Click to push tile in.',
             'move': 'Click a square to move there.',
             'won': 'You Won!!' }
+        self.game_history = []
+        self.move_number = 0
         
         if self.cli == False:
             self.setup_pygame()
@@ -161,6 +161,9 @@ class NewGame:
                                         self.game_phase == "won"
                                     self.board.next_active_player()
                                     self.game_phase = "push"
+                                    self.game_history.append(self.board)
+                                    self.move_number += 1
+                                    print self.move_number
                     elif event.button == 3:
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
@@ -179,14 +182,17 @@ class NewGame:
         def process_computer_move():
             if self.game_phase == "push":
                 #do push and move together
-                #~ rotation, push_in, new_square = self.board.current_player.find_move(self.board)
-                rotation, push_in, new_square = (0, (1,0), self.board.current_player.location)
+                rotation, push_in, new_square = self.board.current_player.find_move(self.board)
+                #~ rotation, push_in, new_square = (0, (1,0), self.board.current_player.location)
                 self.board.current_tile.rotate_n_times(rotation)
                 self.board.push_in(push_in)
+                #~ pygame.time.wait(2000)
                 self.board.update_player_location(self.board.current_player, new_square)
                 if self.board.update_player_item(self.board.current_player, new_square) == "winner":
                     self.game_phase = "won"
                 self.board.next_active_player()
+                self.game_history.append(self.board)
+                self.move_number += 1
                 self.display_everything()
             
         def collect_start_screen_input():
@@ -210,8 +216,10 @@ class NewGame:
                             self.load_images()
                             self.game_phase = "push"
             self.menu.display_menu()
-            
+        
+        self.game_history.append(self.board)    
         self.menu.display_menu()
+        # Game Loop
         while 1:
             if self.game_phase == "start":
                 collect_start_screen_input()
@@ -221,6 +229,8 @@ class NewGame:
                   self.board.possible_moves_exist(self.board.current_player)):
                 self.board.next_active_player()
                 self.game_phase = "push"
+                self.game_history.append(self.board)
+                self.move_number += 1
             elif self.board.current_player.iscomputer is False:
                 process_human_move()
             elif self.board.current_player.iscomputer is True:
