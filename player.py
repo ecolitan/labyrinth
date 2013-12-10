@@ -23,6 +23,11 @@ class Player:
     def __str__(self):
         return self.color
         
+    def __hash__(self):
+        return hash((self.id, self.isactive, self.name, self.color, self.location,
+            self.home, self.current_card, tuple(self.cards), tuple(self.found_cards),
+            self.iscomputer))
+        
     def draw_card(self):
         """Update the current_card
         If replacing the current card, put the old card on the found_cards pile
