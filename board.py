@@ -34,6 +34,23 @@ class Board(dict):
         self.active_players = []
         self.current_player = None
         
+    def __hash__(self):
+
+        hash_list = []
+
+        # hash tile objects together
+        for tile in sorted(self.values()):
+            hash_list.append(tile)
+        hash_list.append(self.current_tile)
+        hash_list.append(self.last_pushed_in)
+        hash_list.append(self.last_pushed_out)
+        
+        # players
+        for player in self.active_players:
+            hash_list.append(player)
+        hash_list.append(self.current_player)
+        return hash(tuple(hash_list))
+        
     def push_in(self, push_in_square):
         """Push tile into push_square
         Update row values
