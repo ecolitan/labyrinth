@@ -163,7 +163,6 @@ class NewGame:
                                     self.game_phase = "push"
                                     self.game_history.append(self.board)
                                     self.move_number += 1
-                                    print self.move_number
                     elif event.button == 3:
                         if self.game_phase == "push":
                             if self.mouse_over_push_in(event.pos)[0]:
@@ -181,9 +180,13 @@ class NewGame:
             
         def process_computer_move():
             if self.game_phase == "push":
+                
                 #do push and move together
+                #~ print "before find_move", hash(self.board)
                 rotation, push_in, new_square = self.board.current_player.find_move(self.board)
                 #~ rotation, push_in, new_square = (0, (1,0), self.board.current_player.location)
+                #~ print "after find_move", hash(self.board)
+                
                 self.board.current_tile.rotate_n_times(rotation)
                 self.board.push_in(push_in)
                 #~ pygame.time.wait(2000)

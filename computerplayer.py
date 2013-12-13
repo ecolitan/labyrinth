@@ -1,5 +1,6 @@
 from player import Player
 from graph import Graph
+from copy import deepcopy
 
 class ComputerPlayer(Player):
     def __init__(self, *args, **kwargs ):
@@ -9,15 +10,24 @@ class ComputerPlayer(Player):
     def find_move(self, board):
         """Find the next move
         Return (rotation, push_in, new_square)"""
-        #~ board_queue = self.possible_push_in(board)
+        working_board = deepcopy(board)
+        #~ print "1", board, hash(board)
+        #~ print "2", working_board, hash(working_board)
+        board_queue = self.possible_push_in(working_board)
         
-        #~ while len(board_queue) != 0:
-            #~ push = board_queue.pop()
-            #~ result = self.evaluate_push(board, push)
-            #~ if type(result) is tuple:
-                #~ return (push[0], push[1], result)
-            #~ elif type(result) is list:
-                #~ board_queue += result
+        graph = Graph(working_board)
+        graph.build_graph(working_board.current_player.location)
+        #~ print "9 comp is at", working_board.current_player.location
+        
+        while len(board_queue) != 0:
+            #~ print "4", len(board_queue), board_queue
+            push = board_queue.pop()
+            result = self.evaluate_push(working_board, push, graph)
+            if result:
+                print "6", (push[0], push[1], result)
+                print "8 computer searched for", board.current_player.current_card
+                return (push[0], push[1], result)
+        #~ print "7 computer searched for", board.current_player.current_card
         return (0, (1,0), board.current_player.location)
             
             
@@ -33,21 +43,18 @@ class ComputerPlayer(Player):
                 output_list.append((rotation, push))
         return output_list
         
-    def evaluate_push(self, board, push_in):
+    def evaluate_push(self, board, push_in, graph):
         """Evaluate a move for the current player of board
-        Return square of item if found, or moves list
+        Return square of item if found in current graph, or False
         """
-        moves_list = []
+        #~ print "3", push_in, type(push_in)
         board.current_tile.rotate_n_times(push_in[0])
         board.push_in(push_in[1])
-        graph = Graph(board)
-        graph.build_graph(board.current_player.location)
+
         for square in board.keys():
             if board[square].item == board.current_player.current_card:
+                #~ print "item found at", square
                 if graph.travel_between(board.current_player.location, square):
+                    #~ print "5", square
                     return square
-                else:
-                    moves_list.append(
-                        board.update_player_location(
-                            board.current_player, square))
-        return moves_list
+        return False
