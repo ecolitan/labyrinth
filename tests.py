@@ -10,13 +10,75 @@ from board import Board
 
 class TestPlayer(unittest.TestCase):
     def setUp(self):
-        pass
+        self.testPlayer1 = Player(('blue', (0,0)))
+
+        _f = open("tests/testPlayer2.pickle")
+        self.testPlayer2 = pickle.load(_f)
+        _f.close()
+        """
+        isactive        True
+        name            ''
+        color           yellow
+        cards           ['spider', 'dwarf', 'book', 'crown', 'mouse',
+                        'lizzard', 'keys', 'bat', 'moth', 'beetle', 'map']
+        location        (6, 6)
+        home            (6, 6)
+        current_card    fairy
+        found_cards     []
+        iscomputer      False
+        __str__()       yellow
+        __hash__()      5409634877126960526
+        """
         
     def test_attributes(self):
-        self.assertIs(type(Player(('green', (0,0))).id), int)
-        self.assertIs(type(Player(('green', (0,0))).isactive), bool)
-        self.assertIs(type(Player(('green', (0,0))).name), str)
-        self.assertIs(type(Player(('green', (0,0))).color), str)
+        self.assertIs(type(self.testPlayer1.id), int)
+        self.assertIs(type(self.testPlayer1.isactive), bool)
+        self.assertIs(type(self.testPlayer1.name), str)
+        self.assertIs(type(self.testPlayer1.color), str)
+        self.assertFalse(self.testPlayer1.iscomputer)
+        
+    def test__str__(self):
+        self.assertEqual('blue', self.testPlayer1.__str__())
+        self.assertEqual('yellow', self.testPlayer2.__str__())
+        
+    def test__hash__(self):
+        self.assertEqual(5409634877126960526, hash(self.testPlayer2))
+        
+    def test_draw_card(self):
+        #Load test object again, because it will be modififed
+        _f = open("tests/testPlayer2.pickle")
+        testPlayer2 = pickle.load(_f)
+        _f.close()
+        #Draw two cards
+        self.assertEqual('map', testPlayer2.draw_card())
+        self.assertEqual('beetle', testPlayer2.draw_card())
+        #Draw eight cards
+        for i in xrange(0,8):
+            testPlayer2.draw_card()
+        #Draw remaining card
+        self.assertNotEqual(None, testPlayer2.draw_card())
+        #List now empty
+        self.assertEqual(None, testPlayer2.draw_card())
+        
+    def test_current_card_found(self):
+        #Load test object again, because it will be modififed
+        _f = open("tests/testPlayer2.pickle")
+        testPlayer2 = pickle.load(_f)
+        _f.close()
+        #Draw all cards
+        for i in xrange(0,len(testPlayer2.cards)):
+            self.assertIsNone(testPlayer2.current_card_found())
+        #Draw from empty stack
+        self.assertEqual("winner", testPlayer2.current_card_found())
+        
+    def test_remaining_cards(self):
+        #Load test object again, because it will be modififed
+        _f = open("tests/testPlayer2.pickle")
+        testPlayer2 = pickle.load(_f)
+        _f.close()
+        self.assertEqual("12", testPlayer2.remaining_cards())
+        testPlayer2.draw_card()
+        self.assertEqual("11", testPlayer2.remaining_cards())
         
 class TestTile(unittest.TestCase):
     def setUp(self):
@@ -168,14 +230,14 @@ class TestNewGame(unittest.TestCase):
     
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestTile)
-unittest.TextTestRunner(verbosity=2).run(suite)
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestGraph)
-unittest.TextTestRunner(verbosity=2).run(suite)
-
-suite = unittest.TestLoader().loadTestsFromTestCase(TestNewGame)
-unittest.TextTestRunner(verbosity=2).run(suite)
+#~ 
+#~ suite = unittest.TestLoader().loadTestsFromTestCase(TestTile)
+#~ unittest.TextTestRunner(verbosity=2).run(suite)
+#~ 
+#~ suite = unittest.TestLoader().loadTestsFromTestCase(TestGraph)
+#~ unittest.TextTestRunner(verbosity=2).run(suite)
+#~ 
+#~ suite = unittest.TestLoader().loadTestsFromTestCase(TestNewGame)
+#~ unittest.TextTestRunner(verbosity=2).run(suite)
 
 
