@@ -52,9 +52,11 @@ class Player:
             return None
         
     def remaining_cards(self):
-        """Return string of remaining cards to find"""
+        """Return number of remaining cards to find as string
+        include the current card in the count
+        """
         if self.current_card:
             i = 1
         else:
-            i= 0
+            i = 0
         return str(len(self.cards) + i)
