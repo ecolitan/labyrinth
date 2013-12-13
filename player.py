@@ -31,21 +31,22 @@ class Player:
     def draw_card(self):
         """Update the current_card
         If replacing the current card, put the old card on the found_cards pile
+        Return value of new card or None 
         """
         if len(self.cards) != 0:
             if self.current_card:
                 self.found_cards.append(self.current_card)
             self.current_card = self.cards.pop()
-            return True
+            return self.current_card
         else:
             self.current_card = None
-            return False
+            return None
             
     def current_card_found(self):
         """Item on current_card was found
         draw a new card
         """
-        if self.draw_card() is False:
+        if self.draw_card() is None:
             return "winner"
         else:
             return None
