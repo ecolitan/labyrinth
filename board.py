@@ -34,6 +34,13 @@ class Board(dict):
         self.active_players = []
         self.current_player = None
         
+    def __repr__(self):
+        return '<%s.%s object at %s>' % (
+            self.__class__.__module__,
+            self.__class__.__name__,
+            hex(id(self))
+        )    
+    
     def __hash__(self):
 
         hash_list = []
