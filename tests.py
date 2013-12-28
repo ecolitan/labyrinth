@@ -92,6 +92,46 @@ class TestTile(unittest.TestCase):
         self.assertIs(type(BoardTile(self.sample_exits1,'','').action), str)
         self.assertEqual(self.sample_exits1, BoardTile(self.sample_exits1).exits)
         
+    def test__repr__(self):
+        self.assertEqual(None, BoardTile(self.sample_exits1).__repr__())
+        self.assertEqual('map', BoardTile(self.sample_exits1, 'map').__repr__())
+        
+    def test__str__(self):
+        self.assertEqual('None', BoardTile(self.sample_exits1).__str__())
+        self.assertEqual('map', BoardTile(self.sample_exits1, 'map').__str__())
+        
+    def test__hash__(self):
+        tile1 = BoardTile([True,True,False,False])
+        tile2 = BoardTile([True,True,False,False])
+        tile3 = BoardTile([True,True,False,False])
+        tile1.id = 0
+        tile2.id = 0
+        tile3.id = 0
+        self.assertEqual(8411025243293485130, tile1.__hash__())
+        self.assertEqual(8411025243293485130, hash(tile1))
+        
+        #~ self.assertEqual(271934571521961151, hash(self.tile2))
+        
+    def test__eq__(self):
+        tile1 = BoardTile([True,True,False,False])
+        tile2 = BoardTile([True,True,False,False], 'map')
+        tile3 = BoardTile([True,True,False,False])
+        tile1.id = 0
+        tile2.id = 0
+        tile3.id = 0
+        self.assertNotEqual(tile1, tile2)
+        self.assertEqual(tile1, tile3)
+        
+    def test__ne__(self):
+        tile1 = BoardTile([True,True,False,False])
+        tile2 = BoardTile([True,True,False,False], 'map')
+        tile3 = BoardTile([True,True,False,False])
+        tile1.id = 0
+        tile2.id = 0
+        tile3.id = 0
+        self.assertNotEqual(tile1, tile2)
+        self.assertEqual(tile1, tile3)
+        
     def test_rotate(self):
         sample1_rotations = [ [False,True,True,False],  #90
                               [False,False,True,True],  #180
@@ -102,6 +142,21 @@ class TestTile(unittest.TestCase):
         for rotation in sample1_rotations:
             test_tile.rotate()
             self.assertEqual(rotation, test_tile.exits)
+            
+    def test_rotate_n_times(self):
+        tile1 = BoardTile([True,True,False,False])
+        with self.assertRaises(Exception):
+            tile1.rotate_n_times(4)
+            tile1.rotate_n_times(-1)
+        sample1_rotations = [ [False,True,True,False],  #90
+                              [False,False,True,True],  #180
+                              [True,False,False,True],  #270
+                              [True,True,False,False] ] #360
+        for i in xrange(0,4):
+            test_tile = BoardTile([True,True,False,False])
+            test_tile.rotate_n_times(i)
+            self.assertEqual(sample1_rotations[i], test_tile.exits)
+            #TODO
         
     def test_randomise_orientation(self):
         rotation_counter = { str([False,True,True,False]):0.0,
@@ -129,6 +184,8 @@ class TestTile(unittest.TestCase):
         self.assertEqual(0, corner_tile.tile_image_rotation())
         corner_tile.rotate()
         self.assertEqual(-90, corner_tile.tile_image_rotation())
+        
+        
 
 class TestGraph(unittest.TestCase):
     def setUp(self):
@@ -230,9 +287,9 @@ class TestNewGame(unittest.TestCase):
     
 suite = unittest.TestLoader().loadTestsFromTestCase(TestPlayer)
 unittest.TextTestRunner(verbosity=2).run(suite)
-#~ 
-#~ suite = unittest.TestLoader().loadTestsFromTestCase(TestTile)
-#~ unittest.TextTestRunner(verbosity=2).run(suite)
+
+suite = unittest.TestLoader().loadTestsFromTestCase(TestTile)
+unittest.TextTestRunner(verbosity=2).run(suite)
 #~ 
 #~ suite = unittest.TestLoader().loadTestsFromTestCase(TestGraph)
 #~ unittest.TextTestRunner(verbosity=2).run(suite)
