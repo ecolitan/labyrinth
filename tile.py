@@ -129,17 +129,21 @@ class BoardTile:
     def add_resident(self, player):
         """Add a player to the occupied_by list
         update is_occupied
+        return occupied_by List
         """
         if player not in self.occupied_by:
             self.occupied_by.append(player)
         self.is_occupied = True
+        return self.occupied_by
             
     def del_resident(self, player):
         """Remove a player from the occupied_by list
         update is_occupied
+        return Player removed or None
         """
         if player in self.occupied_by:
             self.occupied_by.remove(player)
-        if len(self.occupied_by) == 0:
-            self.is_occupied = False
-        
+            if len(self.occupied_by) == 0:
+                self.is_occupied = False
+            return player
+        return None

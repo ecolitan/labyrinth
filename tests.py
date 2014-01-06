@@ -184,7 +184,29 @@ class TestTile(unittest.TestCase):
         corner_tile.rotate()
         self.assertEqual(-90, corner_tile.tile_image_rotation())
         
+    def test_add_resident(self):
+        test_tile = BoardTile([True,False,True,False])
+        self.assertEqual(False, test_tile.is_occupied)
+        self.assertEqual([], test_tile.occupied_by)
+        test_tile.add_resident("player1")
+        self.assertEqual(True, test_tile.is_occupied)
+        self.assertEqual(["player1"], test_tile.occupied_by)
+        test_tile.add_resident("player2")
+        self.assertEqual(True, test_tile.is_occupied)
+        self.assertEqual(["player1", "player2"], test_tile.occupied_by)
         
+    def test_del_resident(self):
+        test_tile = BoardTile([True,False,True,False])
+        self.assertEqual(False, test_tile.is_occupied)
+        self.assertEqual([], test_tile.occupied_by)
+        self.assertIsNone(test_tile.del_resident("player1"))
+        test_tile.add_resident("player1")
+        test_tile.add_resident("player2")
+        self.assertEqual(True, test_tile.is_occupied)
+        self.assertEqual("player1", test_tile.del_resident("player1"))
+        self.assertEqual(["player2"], test_tile.occupied_by)
+        self.assertEqual(1, len(test_tile.occupied_by))
+        self.assertTrue(test_tile.is_occupied)
 
 class TestGraph(unittest.TestCase):
     def setUp(self):
