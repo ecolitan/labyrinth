@@ -5,6 +5,7 @@ import pickle
 from player import Player
 from tile import BoardTile
 from graph import Graph
+from graph import GraphObj
 from labyrinth import NewGame
 from board import Board
 
@@ -208,6 +209,18 @@ class TestTile(unittest.TestCase):
         self.assertEqual(1, len(test_tile.occupied_by))
         self.assertTrue(test_tile.is_occupied)
 
+class TestGraphObj(unittest.TestCase):
+    def setUp(self):
+        pass
+        
+    def test_hash_(self):
+        test_graph_obj1 = GraphObj()
+        test_graph_obj2 = GraphObj()
+        self.assertEqual(test_graph_obj1, test_graph_obj2)
+        self.assertEqual(hash(test_graph_obj1), hash(test_graph_obj2))
+        test_graph_obj1["a"] = 1
+        self.assertNotEqual(hash(test_graph_obj1), hash(test_graph_obj2))
+        
 class TestGraph(unittest.TestCase):
     def setUp(self):
         _f = open("tests/testboard1.pickle")
