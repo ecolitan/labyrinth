@@ -153,10 +153,9 @@ class TestTile(unittest.TestCase):
                               [True,False,False,True],  #270
                               [True,True,False,False] ] #360
         for i in xrange(0,4):
-            test_tile = BoardTile([True,True,False,False])
+            test_tile = BoardTile([False,True,True,False])
             test_tile.rotate_n_times(i)
             self.assertEqual(sample1_rotations[i], test_tile.exits)
-            #TODO
         
     def test_randomise_orientation(self):
         rotation_counter = { str([False,True,True,False]):0.0,
