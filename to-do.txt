@@ -1,0 +1,42 @@
+## TASKS
+
+
+make "game over" screen
+display number of cards for all players
+
+fix resizing, put app inside pygtk
+http://theravingrick.blogspot.hu/2011/08/using-pygame-in-pygtk-app.html
+
+write all unittests
+
+take back button
+layout on menu
+write AI player
+delay for ai moves
+
+logging?
+
+
+## DONE
+
+text box in menu describing what to do
+how to display two or more players on same square
+new background color
+new menu layout
+green boxes for allowed push ins
+red for not allowed push in
+player icon on left
+player pushed off board goes to new square
+if not possible to move to a new square, go directly to next player
+display num remaining cards for current player
+players need to move with the cards
+make start screen, with options to choose etc
+
+#TODO enable resize window.
+#http://stackoverflow.com/questions/20002242/how-to-scale-images-to-screen-size-in-pygame
+#~ elif event.type == VIDEORESIZE:
+    #~ self.screen = pygame.display.set_mode(
+        #~ event.dict['size'], HWSURFACE | DOUBLEBUF | RESIZABLE)
+
+
+

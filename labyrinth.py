@@ -561,6 +561,25 @@ class NewGame:
         # Current Player to go
         self.board.current_player = self.board.active_players[0]
         
+        # Generate test object for unittest - remove later
+        #~ _f = open("testPlayer2.pickle", "a")
+        #~ self.board.next_active_player()
+        #~ pickle.dump(self.board.current_player, _f, pickle.HIGHEST_PROTOCOL)
+        #~ _f.close
+        #~ print self.board.current_player.isactive
+        #~ print self.board.current_player.name
+        #~ print self.board.current_player.color
+        #~ print self.board.current_player.cards
+        #~ print self.board.current_player.location
+        #~ print self.board.current_player.home
+        #~ print self.board.current_player.current_card
+        #~ print self.board.current_player.found_cards
+        #~ print self.board.current_player.iscomputer
+        #~ print self.board.current_player.__str__()
+        #~ print self.board.current_player.__hash__()
+        #~ print hash(self.board.current_player)
+        
+        
     def load_images(self):
         """Load tile images into string buffers
         store buffers in the dict self.image_buffer
